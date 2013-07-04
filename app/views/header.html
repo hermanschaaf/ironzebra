@@ -1,17 +1,38 @@
 <!DOCTYPE html>
-
-<html>
-  <head>
-    <title>{{.title}}</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <link rel="stylesheet" type="text/css" href="/public/css/bootstrap.css">
-    <link rel="shortcut icon" type="image/png" href="/public/images/favicon.png">
-    <script src="/public/js/jquery-1.9.1.min.js" type="text/javascript" charset="utf-8"></script>
-    {{range .moreStyles}}
-      <link rel="stylesheet" type="text/css" href="/public/{{.}}">
-    {{end}}
-    {{range .moreScripts}}
-      <script src="/public/{{.}}" type="text/javascript" charset="utf-8"></script>
-    {{end}}
-  </head>
-  <body>
+<html lang="en">
+<head>
+    <title>{{.title}} | IronZebra</title>
+    <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <style type="text/css">
+    h1 {
+        font-family: "Lucida Grande","Lucida Sans Unicode","Lucida Sans",Geneva,Verdana,sans-serif;
+        margin-bottom: -10px;
+        font-size: 52px;
+        line-height: 1;
+    }
+    h2 {
+        font-family: Georgia,Cambria,"Times New Roman",Times,serif;
+        font-weight: 400;
+        font-style: italic;
+        color: #333332;
+        margin: 20px 0;
+        line-height: 1.2;
+        font-size: 24px;
+    }
+    p {
+        font-family: Georgia,Cambria,"Times New Roman",Times,serif;
+        font-weight: 400;
+        color: #333332;
+        font-size: 18px;
+        line-height: 1.4;
+    }
+    .page {
+        margin-top: 30px;
+    }
+    .sidebar {
+        margin-top: 15px;
+        text-align: center;
+    }
+    </style>
+</head>

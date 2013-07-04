@@ -1,0 +1,10 @@
+{{set . "title" "Post"}}
+{{template "header.html" .}}
+
+{{set . "postTitle" "Hello"}}
+{{set . "postSubtitle" "This works!"}}
+{{template "post.html" .}}
+
+<p>It worked!</p>
+
+{{template "footer.html" .}}
