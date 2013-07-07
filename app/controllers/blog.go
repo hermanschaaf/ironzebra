@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"bitbucket.org/gosimple/slug"
 	"fmt"
 	"github.com/hermanschaaf/ironzebra/app/models"
 	"github.com/hermanschaaf/ironzebra/app/routes"
@@ -9,9 +8,7 @@ import (
 	"github.com/robfig/revel"
 	"github.com/russross/blackfriday"
 	"html/template"
-	"labix.org/v2/mgo"
 	"labix.org/v2/mgo/bson"
-	"time"
 )
 
 type Blog struct {
@@ -19,31 +16,12 @@ type Blog struct {
 	revmgo.MongoController
 }
 
-func AddPost(collection mgo.Collection) {
-	// Index
-	index := mgo.Index{
-		Key:        []string{"short_id", "title", "tags"},
-		Unique:     true,
-		DropDups:   true,
-		Background: true,
-		Sparse:     true,
-	}
-
-	err := collection.EnsureIndex(index)
-	if err != nil {
-		panic(err)
-	}
-
-	// Insert Dataz
-	post_id := 100
-	title := "Zebra, Gopher. Gopher, Zebra"
-	subtitle := "A short and sweet zebra-gopher love story"
-	body := "It was a normal day on the barren African plains deep inside of South Africa. It was dust and dirt speckled with some low shrubbery as far as the eye could see. It has been a dry "
-	err = collection.Insert(&models.Post{ShortID: post_id, Title: title, Slug: slug.Make(title), Subtitle: subtitle, Body: body, Timestamp: time.Now()})
-
-	if err != nil {
-		panic(err)
-	}
+func (c Blog) List() revel.Result {
+	collection := c.Database.C("posts")
+	postList := []models.Post{}
+	iter := collection.Find(nil).Iter()
+	iter.All(&postList)
+	return c.Render(postList)
 }
 
 func (c Blog) Show(id int, slug string) revel.Result {
@@ -61,6 +39,9 @@ func (c Blog) Show(id int, slug string) revel.Result {
 	if result.Slug != slug {
 		fmt.Println(result.Slug)
 		return c.Redirect(routes.Blog.Show(id, result.Slug))
+	}
+	if result.Slug == "" {
+		return c.Redirect(routes.Blog.List())
 	}
 
 	// parse markdown into HTML

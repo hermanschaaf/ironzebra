@@ -1,12 +1,15 @@
 package controllers
 
 import (
+	"bitbucket.org/gosimple/slug"
 	"code.google.com/p/go.crypto/bcrypt"
 	"github.com/hermanschaaf/ironzebra/app/models"
 	"github.com/hermanschaaf/ironzebra/app/routes"
 	"github.com/hermanschaaf/revmgo"
 	"github.com/robfig/revel"
+	"labix.org/v2/mgo"
 	"labix.org/v2/mgo/bson"
+	"time"
 )
 
 type Admin struct {
@@ -14,8 +17,70 @@ type Admin struct {
 	revmgo.MongoController
 }
 
+func addPost(database *mgo.Database, collection *mgo.Collection, title, subtitle, slug, body string) (post models.Post) {
+	// Index
+	index := mgo.Index{
+		Key:        []string{"shortid", "title", "tags"},
+		Unique:     true,
+		DropDups:   true,
+		Background: true,
+		Sparse:     true,
+	}
+
+	err := collection.EnsureIndex(index)
+	if err != nil {
+		panic(err)
+	}
+
+	// Insert Dataz
+	err = collection.Insert(&models.Post{
+		ShortID:   models.GetNextSequence(database),
+		Title:     title,
+		Slug:      slug,
+		Subtitle:  subtitle,
+		Body:      body,
+		Timestamp: time.Now(),
+		Published: false})
+
+	if err != nil {
+		panic(err)
+	}
+
+	result := models.Post{}
+	collection.Find(bson.M{"title": title}).One(&result)
+	return result
+}
+
+func savePost(collection *mgo.Collection, shortID int, title, subtitle, slug, body string, publishNow bool) (post models.Post) {
+	// Update Dataz
+	err := collection.Update(bson.M{"shortid": shortID}, &models.Post{
+		Title:     title,
+		Slug:      slug,
+		Subtitle:  subtitle,
+		Body:      body,
+		Timestamp: time.Now(),
+		Published: false})
+
+	if err != nil {
+		panic(err)
+	}
+
+	result := models.Post{}
+	collection.Find(bson.M{"title": title}).One(&result)
+	return result
+}
+
 func (c Admin) Index() revel.Result {
-	return c.Render()
+	username, loggedIn := c.Session["username"]
+	name, _ := c.Session["name"]
+	if loggedIn == true {
+		collection := c.Database.C("posts")
+		postList := []models.Post{}
+		iter := collection.Find(nil).Iter()
+		iter.All(&postList)
+		return c.Render(username, name, loggedIn, postList)
+	}
+	return c.Render(loggedIn)
 }
 
 func (c Admin) getUser(username string) *models.User {
@@ -28,10 +93,11 @@ func (c Admin) getUser(username string) *models.User {
 func (c Admin) Login(username, password string) revel.Result {
 	user := c.getUser(username)
 	if user != nil {
-		err := bcrypt.CompareHashAndPassword(user.HashedPassword, []byte(password))
+		err := bcrypt.CompareHashAndPassword(user.Password, []byte(password))
 		if err == nil {
-			c.Session["user"] = username
-			c.Flash.Success("Welcome, " + username)
+			c.Session["username"] = username
+			c.Session["name"] = user.Name
+			c.Flash.Success("Welcome, " + user.Name)
 			return c.Redirect(routes.Admin.Index())
 		}
 	}
@@ -39,4 +105,61 @@ func (c Admin) Login(username, password string) revel.Result {
 	c.Flash.Out["username"] = username
 	c.Flash.Error("Login failed")
 	return c.Redirect(routes.Admin.Index())
+}
+
+func (c Admin) Edit(id int, slug string) revel.Result {
+	// Collection Posts
+	collection := c.Database.C("posts")
+
+	// Query the post by short id
+	result := models.Post{}
+	err := collection.Find(bson.M{"shortid": id}).One(&result)
+	if err != nil {
+		panic(err)
+	}
+
+	// if the slug is wrong, redirect to correct slug
+	if result.Slug != slug {
+		return c.Redirect(routes.Blog.Show(id, result.Slug))
+	}
+	if result.Slug == "" {
+		return c.Redirect(routes.Admin.Index())
+	}
+
+	newPost := !result.Published
+
+	return c.Render(result, newPost)
+}
+
+func (c Admin) New() revel.Result {
+	return c.Render()
+}
+
+func validatePost(c Admin, title, body, slugString string) {
+	c.Validation.Required(title).Message("A title is required")
+	c.Validation.Required(body).Message("You probably want some text in your post, no?")
+	c.Validation.Required(slugString).Message("You need a slug...")
+}
+
+func (c Admin) SaveNew(title, subtitle, body string) revel.Result {
+	slugString := slug.Make(title)
+	validatePost(c, title, body, slugString)
+	collection := c.Database.C("posts")
+	result := addPost(c.Database, collection, title, subtitle, slugString, body)
+	return c.Redirect(routes.Blog.Show(result.ShortID, result.Slug))
+}
+
+func (c Admin) Save(id int, title, subtitle, slug, body, publish string) revel.Result {
+	validatePost(c, title, body, slug)
+	collection := c.Database.C("posts")
+	publishNow := false
+	if publish == "Publish" {
+		publishNow = true
+	}
+	result := savePost(collection, id, title, subtitle, slug, body, publishNow)
+	return c.Redirect(routes.Blog.Show(result.ShortID, result.Slug))
+}
+
+func (c Admin) RedirectToSlug(id int) revel.Result {
+	return c.Edit(id, "")
 }

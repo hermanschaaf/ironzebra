@@ -1,6 +1,7 @@
 {{set . "title" "Admin"}}
 {{template "header.html" .}}
-
+    <link rel="stylesheet" type="text/css" href="/public/css/admin.css">
+</head>
 <body>
     <div class="container">   
         {{if .flash.error}} 
@@ -24,6 +25,6 @@
         </div>
         <div class="row-fluid page">
             <div class="span2 offset1 sidebar">
-                <a href="/"><img alt="IronZebra - Web Application Developer from Cape Town, South Africa" src="/public/images/ironzebra.png"></a>
+                <a href="{{url "Admin.Index"}}"><img alt="IronZebra - Web Application Developer from Cape Town, South Africa" src="/public/images/ironzebra.png"></a>
                 <h3>/admin</h3>
             </div>

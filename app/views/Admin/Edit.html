@@ -1,0 +1,42 @@
+{{template "Admin/base.html" .}}
+            <div class="span6">
+                <form method="post" class="form-vertical" action="{{if .result.ShortID}}{{url "Admin.Save" .result.ShortID}}{{else}}{{url "Admin.SaveNew"}}{{end}}">
+                    <fieldset>
+                        <legend>{{.verb}} Post</legend>
+                        <div class="control-group">
+                            <label class="control-label" for="title">Title</label>
+                            <div class="controls">
+                                <input type="text" id="title" name="title" value="{{.result.Title}}"/>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label" for="subtitle">Subtitle</label>
+                            <div class="controls">
+                                <input type="text" id="subtitle" name="subtitle" value="{{.result.Subtitle}}"/>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label" for="body">Body</label>
+                            <div class="controls">
+                                <textarea id="body" name="body">{{.result.Body}}</textarea>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <div class="text-right">
+                        {{if .newPost}}
+                        <input type="submit" name="publish" class="btn btn-large btn-success" value="Save Draft" />
+                        {{else}}
+                        <input type="submit" name="publish" class="btn btn-large btn-success" value="Publish" />
+                        {{end}}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="/public/js/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="/public/js/jquery-expandable/jquery.expandable.js"></script>
+    <script type="text/javascript">
+    $(function(){
+        $('textarea').expandable();
+    });
+    </script>
