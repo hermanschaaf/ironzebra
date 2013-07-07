@@ -6,7 +6,11 @@ module:testrunner
 
 GET     /                                       App.Index
 
-GET     /posts/:id/*slug                        Blog.Show
+GET     /posts/:id                              Blog.RedirectToSlug
+GET     /posts/:id/:slug                        Blog.Show
+
+GET     /admin                                  Admin.Index
+POST    /login                                  Admin.Login
 
 # Ignore favicon requests
 GET     /favicon.ico                            404

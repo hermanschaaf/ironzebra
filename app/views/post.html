@@ -1,17 +1,23 @@
 <body>
     <div class="container">
         <div class="row-fluid page">
-            <div class="span2 offset2 sidebar">
+            <div class="span2 offset1 sidebar">
                 <a href="/"><img alt="IronZebra - Web Application Developer from Cape Town, South Africa" src="/public/images/ironzebra.png"></a>
+                {{if .showAuthor}}
+                <div class="author">
+                    <a class="name" href="/">Herman Schaaf</a>
+                    <time datetime="2013-11-13">13<sup>th</sup> November 2013</time>
+                </div>
+                {{end}}
             </div>
             <div class="span6">
-                <h1>{{.postTitle}}</h1>
-                <h2>{{if .postSubtitle}}
-                    {{.postSubtitle}}
+                <h1>{{if .result.Title}}{{ .result.Title}}{{else}}IronZebra{{end}}</h1>
+                <h2>{{if .result.Subtitle}}
+                    {{.result.Subtitle}}
                     {{else}}
                     Building web applications in Cape Town, Taipei and Tokyo. <a href="http://www.ironzebra.com/news/" title="Fair warning: It's mostly about boring programming stuff">Read the blog</a>
                     {{end}}</h2>
             </div>
         </div>
         <div class="row-fluid">
-            <div class="span6 offset4">
+            <div class="span6 offset3">

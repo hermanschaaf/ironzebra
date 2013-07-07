@@ -1,0 +1,29 @@
+{{set . "title" "Admin"}}
+{{template "header.html" .}}
+
+<body>
+    <div class="container">   
+        {{if .flash.error}} 
+        <div class="row-fluid">
+            <div class="span12 text-center">
+                <p class="text-error">
+                  <strong>{{.flash.error}}</strong>
+                </p>
+            </div>
+        </div>
+        {{end}}
+        {{if .flash.success}}
+        <div class="row-fluid">
+            <div class="span12 text-center">
+                <p class="text-success">
+                  <strong>{{.flash.success}}</strong>
+                </p>
+            </div>
+        </div>
+        {{end}}
+        </div>
+        <div class="row-fluid page">
+            <div class="span2 offset1 sidebar">
+                <a href="/"><img alt="IronZebra - Web Application Developer from Cape Town, South Africa" src="/public/images/ironzebra.png"></a>
+                <h3>/admin</h3>
+            </div>

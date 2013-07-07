@@ -5,6 +5,6 @@
 {{set . "postSubtitle" "This works!"}}
 {{template "post.html" .}}
 
-<p>It worked!</p>
+{{ .html_output }}
 
 {{template "footer.html" .}}

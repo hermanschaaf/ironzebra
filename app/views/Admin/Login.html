@@ -1,0 +1,13 @@
+{{template "Admin/base.html" .}}
+            <div class="span6">
+                <h1>{{if .result.Title}}{{ .result.Title}}{{else}}IronZebra{{end}}</h1>
+                <h2>{{if .result.Subtitle}}
+                    {{.result.Subtitle}}
+                    {{else}}
+                    Building web applications in Cape Town, Taipei and Tokyo. <a href="http://www.ironzebra.com/news/" title="Fair warning: It's mostly about boring programming stuff">Read the blog</a>
+                    {{end}}</h2>
+            </div>
+        </div>
+    </div>
+
+{{template "footer.html" .}}

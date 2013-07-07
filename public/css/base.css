@@ -1,0 +1,49 @@
+h1 {
+    font-family: "Lucida Grande","Lucida Sans Unicode","Lucida Sans",Geneva,Verdana,sans-serif;
+    margin-bottom: -10px;
+    font-size: 52px;
+    line-height: 1;
+}
+h2 {
+    font-family: Georgia,Cambria,"Times New Roman",Times,serif;
+    font-weight: 400;
+    font-style: italic;
+    color: #333332;
+    margin: 20px 0;
+    line-height: 1.2;
+    font-size: 27px;
+}
+p {
+    font-family: Georgia,Cambria,"Times New Roman",Times,serif;
+    font-weight: 400;
+    color: #333332;
+    font-size: 22px;
+    line-height: 1.4;
+}
+.page {
+    margin-top: 30px;
+}
+.sidebar {
+    margin-top: 15px;
+    text-align: right;
+    padding-right: 20px;
+}
+.author {
+    padding: 10px 0;
+    font-size: 16px;
+}
+.author .name {
+    font-weight: bold;
+    color: inherit;
+}
+.author time {
+    display: block;
+    font-size: 0.9em;
+    color: #666;
+}
+
+@media (max-width: 1200px) {
+    .sidebar {
+        text-align: center;
+    }
+}

@@ -1,6 +1,9 @@
 package app
 
-import "github.com/robfig/revel"
+import (
+	"github.com/hermanschaaf/revmgo"
+	"github.com/robfig/revel"
+)
 
 func init() {
 	// Filters is the default set of global filters.
@@ -16,4 +19,7 @@ func init() {
 		revel.InterceptorFilter,       // Run interceptors around the action.
 		revel.ActionInvoker,           // Invoke the action.
 	}
+
+	// load the database
+	revel.OnAppStart(revmgo.AppInit)
 }
