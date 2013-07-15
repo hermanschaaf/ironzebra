@@ -3,6 +3,7 @@ package app
 import (
 	"github.com/hermanschaaf/revmgo"
 	"github.com/robfig/revel"
+	"time"
 )
 
 func init() {
@@ -19,6 +20,9 @@ func init() {
 		revel.InterceptorFilter,       // Run interceptors around the action.
 		revel.ActionInvoker,           // Invoke the action.
 	}
+
+	// date formatting
+	revel.TemplateFuncs["formatDate"] = func(date time.Time) string { return date.Format("02 January 2006") }
 
 	// load the database
 	revel.OnAppStart(revmgo.AppInit)

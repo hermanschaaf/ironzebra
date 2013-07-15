@@ -9,15 +9,23 @@
                 <a href="{{url "App.Index"}}"><img alt="IronZebra - Web Application Developer from Cape Town, South Africa" src="/public/images/ironzebra.png"></a>
             </div>
             <div class="span6">
-                <table class="table table-striped">
-                    <tbody>
+                <div class="postlist">
+                    {{$isAdmin := .isAdmin}}
                     {{range .postList}}
-                        <tr>
-                          <td><a href="{{url "Blog.Show" .ShortID .Slug}}">{{.Title}}</a></td>
-                        </tr>
+                        <div class="post{{if eq .Published false}} unpublished{{end}}">
+                        {{if eq .Published false}}
+                            <span class="label label-info">unpublished</span>
+                        {{end}}
+                            <a href="{{url "Blog.Show" .ShortID .Slug}}">
+                                <h1 class="title">{{.Title}}</h1>
+                                <h2 class="subtitle">{{.Subtitle}}</h2>
+                            </a>
+                        </div>
                     {{end}}
-                    </tbody>
-                </table>
+                </div>
+                <div class="full-list-link center">
+                    <a href="{{url "Blog.ListAll" }}">See the full list of posts</a>
+                </div>
             </div>
         </div>
     </div>

@@ -50,17 +50,14 @@ func main() {
 			fmt.Println("Adding a new user")
 			fmt.Println("-----------------")
 
-			// fmt.Println("What is the user's real name? ")
-			// fmt.Scanf("%s", &name)
+			fmt.Println("What is the user's real name? ")
+			fmt.Scanf("%s", &name)
 
-			// fmt.Println("What should the username be? ")
-			// fmt.Scanf("%s", &username)
+			fmt.Println("What should the username be? ")
+			fmt.Scanf("%s", &username)
 
-			// fmt.Println("Please enter a strong password: ")
-			// fmt.Scanf("%s", &password)
-			name = "Herman Schaaf"
-			username = "hermanschaaf"
-			password = "bakabakabaka"
+			fmt.Println("Please enter a strong password: ")
+			fmt.Scanf("%s", &password)
 
 			session := revmgo.Session.New()
 			users := session.DB(revmgo.Database).C("users")

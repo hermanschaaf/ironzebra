@@ -1,6 +1,8 @@
+body {
+    margin-bottom: 40px;
+}
 h1 {
     font-family: "Lucida Grande","Lucida Sans Unicode","Lucida Sans",Geneva,Verdana,sans-serif;
-    margin-bottom: -10px;
     font-size: 52px;
     line-height: 1;
 }
@@ -9,9 +11,11 @@ h2 {
     font-weight: 400;
     font-style: italic;
     color: #333332;
-    margin: 20px 0;
     line-height: 1.2;
     font-size: 27px;
+}
+h2.subtitle {
+    margin: -10px 0 20px;
 }
 p {
     font-family: Georgia,Cambria,"Times New Roman",Times,serif;
@@ -41,7 +45,50 @@ p {
     font-size: 0.9em;
     color: #666;
 }
+.admin .btn {
+    margin-bottom: 10px;
+}
+.admin ul {
+    list-style-type: none;
+}
+.postlist {
 
+}
+.postlist .post {
+    border-bottom: 1px solid #ccc;
+}
+.postlist .post .title {
+    font-size: 32px;
+}
+.postlist .post .subtitle {
+    font-size: 18px;
+}
+.postlist .post.unpublished .title {
+    font-size: 18px;
+}
+.postlist .post.unpublished .subtitle {
+    font-size: 14px;
+}
+.postlist a {
+    color: inherit;
+}
+.postlist a:hover {
+    text-decoration: none;
+    color: #666;
+}
+.full-list-link {
+    font-size: 22px;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 20px;
+}
+.fork-image {
+    position: absolute; 
+    top: 0; 
+    right: 0; 
+    border: 0;
+    background: transparent url(/public/images/gopher.png) no-repeat top right;
+}
 @media (max-width: 1200px) {
     .sidebar {
         text-align: center;

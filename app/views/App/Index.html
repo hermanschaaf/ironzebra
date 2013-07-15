@@ -2,7 +2,9 @@
 {{template "header.html" .}}
 </head>
 {{set . "postTitle" "IronZebra"}}
-{{template "post.html" .}}
+{{template "base.html" .}}
+                <h1>IronZebra</h1>
+                <h2>Building web applications in Cape Town, Taipei and Tokyo. <a href="{{url "Blog.List" }}" title="Fair warning: It's mostly about boring programming stuff">Read the blog</a></h2>
 
                 <p>I am Herman Schaaf, a web application developer that particularly likes building things in Python, Django, Node.js, JavaScript and, recently, Go.</p>
 
@@ -14,7 +16,7 @@
 
                 <hr/>
 
-                <p>You might also like my latest blog post, <a href="http://ironzebra.com/news/53/skipping-frames-in-python-opencv">Skipping frames in Python OpenCV</a></p>
+                {{if .result.ShortID}}<p>You might also like my latest blog post, <a href="{{url "Blog.Show" .result.ShortID .result.Slug }}">{{.result.Title}}</a></p>{{end}}
             </div>
         </div>
     </div>

@@ -19,24 +19,47 @@ type Blog struct {
 func (c Blog) List() revel.Result {
 	collection := c.Database.C("posts")
 	postList := []models.Post{}
-	iter := collection.Find(nil).Iter()
+	query := bson.M{"published": true}
+	if c.Session["role"] == "admin" {
+		query = nil
+	}
+	iter := collection.Find(query).Sort("-timestamp").Limit(5).Iter()
 	iter.All(&postList)
-	return c.Render(postList)
+	isAdmin := c.Session["role"] == "admin"
+	return c.Render(postList, isAdmin)
 }
 
-func (c Blog) Show(id int, slug string) revel.Result {
+func (c Blog) ListAll() revel.Result {
+	collection := c.Database.C("posts")
+	postList := []models.Post{}
+	query := bson.M{"published": true}
+	if c.Session["role"] == "admin" {
+		query = nil
+	}
+	iter := collection.Find(query).Sort("-timestamp").Iter()
+	iter.All(&postList)
+	isAdmin := c.Session["role"] == "admin"
+	return c.Render(postList, isAdmin)
+}
+
+func (c Blog) Show(id int, slugString string) revel.Result {
 	// Collection Posts
 	collection := c.Database.C("posts")
+	isAdmin := c.Session["role"] == "admin"
 
 	// Query the post by short id
 	result := models.Post{}
-	err := collection.Find(bson.M{"shortid": id}).One(&result)
+	query := bson.M{"shortid": id}
+	if isAdmin == false {
+		query["published"] = true
+	}
+	err := collection.Find(query).One(&result)
 	if err != nil {
 		panic(err)
 	}
 
 	// if the slug is wrong, redirect to correct slug
-	if result.Slug != slug {
+	if result.Slug != slugString {
 		fmt.Println(result.Slug)
 		return c.Redirect(routes.Blog.Show(id, result.Slug))
 	}
@@ -50,9 +73,14 @@ func (c Blog) Show(id int, slug string) revel.Result {
 	showAuthor := true
 	rootUrl, _ := revel.Config.String("zebra.root_url")
 
-	return c.Render(result, rootUrl, html_output, showAuthor)
+	return c.Render(result, rootUrl, html_output, showAuthor, isAdmin)
 }
 
 func (c Blog) RedirectToSlug(id int) revel.Result {
 	return c.Show(id, "")
+}
+
+func (c Blog) RedirectToPost(id int, slugString string) revel.Result {
+	// redirect for users coming to the legacy /news url from google
+	return c.Redirect(routes.Blog.Show(id, slugString))
 }

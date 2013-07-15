@@ -1,6 +1,6 @@
 {{template "Admin/base.html" .}}
             <div class="span6">
-                <form method="post" class="form-vertical" action="{{if .result.ShortID}}{{url "Admin.Save" .result.ShortID}}{{else}}{{url "Admin.SaveNew"}}{{end}}">
+                <form method="post" accept-charset="utf-8" class="form-vertical" action="{{if .result.ShortID}}{{url "Admin.Save" .result.ShortID}}{{else}}{{url "Admin.SaveNew"}}{{end}}">
                     <fieldset>
                         <legend>{{.verb}} Post</legend>
                         <div class="control-group">
@@ -15,8 +15,16 @@
                                 <input type="text" id="subtitle" name="subtitle" value="{{.result.Subtitle}}"/>
                             </div>
                         </div>
+                        {{if .result.ShortID}}
                         <div class="control-group">
-                            <label class="control-label" for="body">Body</label>
+                            <label class="control-label" for="slugstring">Slug</label>
+                            <div class="controls">
+                                <input type="text" id="slugstring" name="slugString" value="{{.result.Slug}}"/>
+                            </div>
+                        </div>
+                        {{end}}
+                        <div class="control-group">
+                            <label class="control-label" for="body">Body (<a href="http://daringfireball.net/projects/markdown/syntax" target="_blank">Markdown Syntax</a>)</label>
                             <div class="controls">
                                 <textarea id="body" name="body">{{.result.Body}}</textarea>
                             </div>
@@ -24,7 +32,7 @@
                     </fieldset>
                     <div class="text-right">
                         {{if .newPost}}
-                        <input type="submit" name="publish" class="btn btn-large btn-success" value="Save Draft" />
+                        <input type="submit" name="publish" class="btn btn-large btn-success" value="Save &amp; Preview" />
                         {{else}}
                         <input type="submit" name="publish" class="btn btn-large btn-success" value="Publish" />
                         {{end}}

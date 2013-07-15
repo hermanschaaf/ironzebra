@@ -7,19 +7,24 @@ module:testrunner
 GET     /                                       App.Index
 
 GET     /posts/                                 Blog.List
+GET     /news/                                  Blog.ListAll
+GET     /news/:id                               Blog.RedirectToSlug
+GET     /news/:id/:slugString                   Blog.RedirectToPost
 GET     /posts/:id                              Blog.RedirectToSlug
-GET     /posts/:id/:slug                        Blog.Show
+GET     /posts/:id/:slugString                  Blog.Show
 
 GET     /admin                                  Admin.Index
 POST    /login                                  Admin.Login
+GET     /logout                                 Admin.Logout
 GET     /edit/:id                               Admin.RedirectToSlug
 GET     /new                                    Admin.New
-GET     /edit/:id/:slug                         Admin.Edit
+GET     /edit/:id/:slugString                   Admin.Edit
 POST    /save/new                               Admin.SaveNew
 POST    /save/:id/                              Admin.Save
+POST    /publish/:id/                           Admin.Publish
+POST    /unpublish/:id/                         Admin.Unpublish
 
-# Ignore favicon requests
-GET     /favicon.ico                            404
+GET     /favicon.ico                            Static.Serve("public/images","favicon.png")
 
 # Map static resources from the /app/public folder to the /public path
 GET     /public/*filepath                       Static.Serve("public")
