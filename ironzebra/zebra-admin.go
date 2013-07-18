@@ -3,18 +3,20 @@ package main
 // This is an admin tool for managing Zebra blogs
 // It's a work in progress - there is no proper error-handling,
 // so if it just explodes, you'll probably have to trace the code
-// to see what's going wrong. 
+// to see what's going wrong.
 //
 // If I have to guess though, it's probably that some settings
 // (like db.name and revmgo.dial) are not set in app.conf, or that
 // the database key you are trying to create already exists.
 
 import (
+	"bufio"
 	"fmt"
 	"github.com/hermanschaaf/ironzebra/app/management"
 	"github.com/hermanschaaf/revmgo"
 	"github.com/robfig/revel"
 	"os"
+	"strings"
 )
 
 func printHelp() {
@@ -46,18 +48,22 @@ func main() {
 			loadApp(args)
 
 			var name, username, password string
+			reader := bufio.NewReader(os.Stdin)
 
 			fmt.Println("Adding a new user")
 			fmt.Println("-----------------")
 
 			fmt.Println("What is the user's real name? ")
-			fmt.Scanf("%s", &name)
+			name, _ = reader.ReadString('\n')
+			name = strings.TrimSpace(name)
 
 			fmt.Println("What should the username be? ")
-			fmt.Scanf("%s", &username)
+			username, _ = reader.ReadString('\n')
+			username = strings.TrimSpace(username)
 
 			fmt.Println("Please enter a strong password: ")
-			fmt.Scanf("%s", &password)
+			password, _ = reader.ReadString('\n')
+			password = strings.TrimSpace(password)
 
 			session := revmgo.Session.New()
 			users := session.DB(revmgo.Database).C("users")
