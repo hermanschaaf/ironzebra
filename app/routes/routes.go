@@ -4,18 +4,6 @@ package routes
 import "github.com/robfig/revel"
 
 
-type tApp struct {}
-var App tApp
-
-
-func (_ tApp) Index(
-		) string {
-	args := make(map[string]string)
-	
-	return revel.MainRouter.Reverse("App.Index", args).Url
-}
-
-
 type tAdmin struct {}
 var Admin tAdmin
 
@@ -177,6 +165,18 @@ func (_ tBlog) RedirectToPost(
 	revel.Unbind(args, "id", id)
 	revel.Unbind(args, "slugString", slugString)
 	return revel.MainRouter.Reverse("Blog.RedirectToPost", args).Url
+}
+
+
+type tApp struct {}
+var App tApp
+
+
+func (_ tApp) Index(
+		) string {
+	args := make(map[string]string)
+	
+	return revel.MainRouter.Reverse("App.Index", args).Url
 }
 
 
