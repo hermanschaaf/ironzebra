@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	"github.com/hermanschaaf/ironzebra/app/models"
 	"github.com/hermanschaaf/ironzebra/app/routes"
 	"github.com/hermanschaaf/revmgo"
@@ -16,33 +15,59 @@ type Blog struct {
 	revmgo.MongoController
 }
 
-func (c Blog) List() revel.Result {
+func getPosts(c Blog, limit int, category string, admin bool) []models.Post {
 	collection := c.Database.C("posts")
 	postList := []models.Post{}
 	query := bson.M{"published": true}
 	if c.Session["role"] == "admin" {
-		query = nil
+		query = bson.M{}
 	}
-	iter := collection.Find(query).Sort("-timestamp").Limit(5).Iter()
-	iter.All(&postList)
+	if category != "" {
+		query["category"] = category
+	}
+	q := collection.Find(query).Sort("-timestamp")
+	if limit > 0 {
+		iter := q.Limit(limit).Iter()
+		iter.All(&postList)
+		return postList
+	} else {
+		iter := q.Iter()
+		iter.All(&postList)
+		return postList
+	}
+}
+
+func getCategories(c Blog) []models.Category {
+	categoryList := []models.Category{}
+	collection := c.Database.C("categories")
+	iter := collection.Find(nil).Sort("name").Iter()
+	iter.All(&categoryList)
+	return categoryList
+}
+
+func (c Blog) List() revel.Result {
 	isAdmin := c.Session["role"] == "admin"
-	return c.Render(postList, isAdmin)
+	postList := getPosts(c, 5, "", isAdmin)
+	categoryList := getCategories(c)
+	return c.Render(postList, categoryList, isAdmin)
 }
 
 func (c Blog) ListAll() revel.Result {
-	collection := c.Database.C("posts")
-	postList := []models.Post{}
-	query := bson.M{"published": true}
-	if c.Session["role"] == "admin" {
-		query = nil
-	}
-	iter := collection.Find(query).Sort("-timestamp").Iter()
-	iter.All(&postList)
 	isAdmin := c.Session["role"] == "admin"
-	return c.Render(postList, isAdmin)
+	postList := getPosts(c, 0, "", isAdmin)
+	categoryList := getCategories(c)
+	return c.Render(postList, categoryList, isAdmin)
 }
 
-func (c Blog) Show(id int, slugString string) revel.Result {
+func (c Blog) ListCategory(category string) revel.Result {
+	isAdmin := c.Session["role"] == "admin"
+	postList := getPosts(c, 0, category, isAdmin)
+	categoryList := getCategories(c)
+	currentCategory := category
+	return c.Render(postList, categoryList, isAdmin, currentCategory)
+}
+
+func (c Blog) Show(category string, id int, slugString string) revel.Result {
 	// Collection Posts
 	collection := c.Database.C("posts")
 	isAdmin := c.Session["role"] == "admin"
@@ -58,11 +83,19 @@ func (c Blog) Show(id int, slugString string) revel.Result {
 		panic(err)
 	}
 
+	// if wrong category, redirect to correct category
+	if result.Category != category {
+		cat := result.Category
+		if result.Category == "" {
+			cat = "cats"
+		}
+		return c.Redirect(routes.Blog.Show(cat, id, result.Slug))
+	}
 	// if the slug is wrong, redirect to correct slug
 	if result.Slug != slugString {
-		fmt.Println(result.Slug)
-		return c.Redirect(routes.Blog.Show(id, result.Slug))
+		return c.Redirect(routes.Blog.Show(category, id, result.Slug))
 	}
+	// TODO: a bit of a hack again..
 	if result.Slug == "" {
 		return c.Redirect(routes.Blog.List())
 	}
@@ -73,14 +106,10 @@ func (c Blog) Show(id int, slugString string) revel.Result {
 	showAuthor := true
 	rootUrl, _ := revel.Config.String("zebra.root_url")
 
-	return c.Render(result, rootUrl, html_output, showAuthor, isAdmin)
+	canonical := routes.Blog.Show(category, id, result.Slug)
+	return c.Render(result, canonical, rootUrl, html_output, showAuthor, isAdmin)
 }
 
-func (c Blog) RedirectToSlug(id int) revel.Result {
-	return c.Show(id, "")
-}
-
-func (c Blog) RedirectToPost(id int, slugString string) revel.Result {
-	// redirect for users coming to the legacy /news url from google
-	return c.Redirect(routes.Blog.Show(id, slugString))
+func (c Blog) RedirectToSlug(category string, id int) revel.Result {
+	return c.Show(category, id, "")
 }

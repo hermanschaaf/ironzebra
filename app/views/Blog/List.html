@@ -1,4 +1,6 @@
-{{set . "title" "Post"}}
+{{if not .title}}
+    {{set . "title" "Latest Blog Posts"}}
+{{end}}
 {{template "header.html" .}}
 </head>
 
@@ -7,6 +9,17 @@
         <div class="row-fluid page">
             <div class="span2 offset1 sidebar">
                 <a href="{{url "App.Index"}}"><img alt="IronZebra - Web Application Developer from Cape Town, South Africa" src="/public/images/ironzebra.png"></a>
+                <ul class="sidebar-menu">
+                    {{$currentCategory := .currentCategory}}
+                    {{range .categoryList}}
+                    {{if eq .Name $currentCategory}}
+                    <li title="{{.Description}}" class="currentLink">{{.Name}}</li>
+                    {{else}}
+                    <li><a title="{{.Description}}" href="{{url "Blog.ListCategory" .Name }}">{{.Name}}</a></li>
+                    {{end}}
+                    
+                    {{end}}
+                </ul>
             </div>
             <div class="span6">
                 <div class="postlist">
@@ -16,15 +29,18 @@
                         {{if eq .Published false}}
                             <span class="label label-info">unpublished</span>
                         {{end}}
-                            <a href="{{url "Blog.Show" .ShortID .Slug}}">
+                            <a href="{{url "Blog.Show" .Category .ShortID .Slug}}">
                                 <h1 class="title">{{.Title}}</h1>
                                 <h2 class="subtitle">{{.Subtitle}}</h2>
                             </a>
                         </div>
                     {{end}}
+                    {{if not .postList}}
+                        <p>Woops, I haven't put any posts in this category yet.</p>
+                    {{end}}
                 </div>
                 <div class="full-list-link center">
-                    <a href="{{url "Blog.ListAll" }}">See the full list of posts</a>
+                    <a href="{{url "Blog.ListAll" }}">All the IronZebra posts</a>
                 </div>
             </div>
         </div>

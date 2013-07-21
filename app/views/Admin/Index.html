@@ -1,40 +1,7 @@
 {{template "Admin/base.html" .}}
-        {{if .loggedIn }}
             <div class="span6">
-                <h4>Posts <a href="{{url "Admin.New" }}">Create New</a></h4>
-                <table class="table table-striped">
-                    <tbody>
-                    {{range .postList}}
-                        <tr>
-                          <td>{{.Title}}</td>
-                          <td>
-                            <a href="{{url "Admin.Edit" .ShortID .Slug}}">Edit</a>
-                            <a href="{{url "Blog.Show" .ShortID .Slug}}">View</a>
-                          </td>
-                        </tr>
-                    {{end}}
-                    </tbody>
-                </table>
+                
             </div>
-        {{else}}
-            <div class="span6">
-                <div id="login">
-                  <form action="{{url "Admin.Login"}}" id="formLogin" method="POST">
-                    <p class="field">
-                      <label>Login Name:</label>
-                      <input type="text" name="username" size="19" value="" />
-                    </p>
-                    <p class="field">
-                      <label>Password:</label>
-                      <input type="password" name="password" size="19"/>
-                    </p>
-                    <p class="buttons">
-                      <input type="submit" value="Account login" />
-                    </p>
-                  </form>
-                </div>
-            </div>
-        {{end}}
         </div>
     </div>
 {{template "footer.html" .}}

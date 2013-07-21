@@ -13,6 +13,8 @@ type Post struct {
 	Subtitle  string
 	Slug      string
 	Body      string
+	Category  string
+	Tags      []string
 	Published bool
 	Timestamp time.Time
 }

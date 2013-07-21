@@ -54,12 +54,14 @@ func (_ tAdmin) New(
 func (_ tAdmin) SaveNew(
 		title string,
 		subtitle string,
+		category string,
 		body string,
 		) string {
 	args := make(map[string]string)
 	
 	revel.Unbind(args, "title", title)
 	revel.Unbind(args, "subtitle", subtitle)
+	revel.Unbind(args, "category", category)
 	revel.Unbind(args, "body", body)
 	return revel.MainRouter.Reverse("Admin.SaveNew", args).Url
 }
@@ -69,6 +71,7 @@ func (_ tAdmin) Save(
 		title string,
 		subtitle string,
 		slugString string,
+		category string,
 		body string,
 		publish string,
 		) string {
@@ -78,6 +81,7 @@ func (_ tAdmin) Save(
 	revel.Unbind(args, "title", title)
 	revel.Unbind(args, "subtitle", subtitle)
 	revel.Unbind(args, "slugString", slugString)
+	revel.Unbind(args, "category", category)
 	revel.Unbind(args, "body", body)
 	revel.Unbind(args, "publish", publish)
 	return revel.MainRouter.Reverse("Admin.Save", args).Url
@@ -110,11 +114,48 @@ func (_ tAdmin) Unpublish(
 	return revel.MainRouter.Reverse("Admin.Unpublish", args).Url
 }
 
+func (_ tAdmin) Categories(
+		) string {
+	args := make(map[string]string)
+	
+	return revel.MainRouter.Reverse("Admin.Categories", args).Url
+}
+
+func (_ tAdmin) NewCategory(
+		name string,
+		description string,
+		) string {
+	args := make(map[string]string)
+	
+	revel.Unbind(args, "name", name)
+	revel.Unbind(args, "description", description)
+	return revel.MainRouter.Reverse("Admin.NewCategory", args).Url
+}
+
 func (_ tAdmin) AddImages(
 		) string {
 	args := make(map[string]string)
 	
 	return revel.MainRouter.Reverse("Admin.AddImages", args).Url
+}
+
+
+type tApp struct {}
+var App tApp
+
+
+func (_ tApp) Index(
+		) string {
+	args := make(map[string]string)
+	
+	return revel.MainRouter.Reverse("App.Index", args).Url
+}
+
+func (_ tApp) Login(
+		) string {
+	args := make(map[string]string)
+	
+	return revel.MainRouter.Reverse("App.Login", args).Url
 }
 
 
@@ -136,47 +177,37 @@ func (_ tBlog) ListAll(
 	return revel.MainRouter.Reverse("Blog.ListAll", args).Url
 }
 
+func (_ tBlog) ListCategory(
+		category string,
+		) string {
+	args := make(map[string]string)
+	
+	revel.Unbind(args, "category", category)
+	return revel.MainRouter.Reverse("Blog.ListCategory", args).Url
+}
+
 func (_ tBlog) Show(
+		category string,
 		id int,
 		slugString string,
 		) string {
 	args := make(map[string]string)
 	
+	revel.Unbind(args, "category", category)
 	revel.Unbind(args, "id", id)
 	revel.Unbind(args, "slugString", slugString)
 	return revel.MainRouter.Reverse("Blog.Show", args).Url
 }
 
 func (_ tBlog) RedirectToSlug(
+		category string,
 		id int,
 		) string {
 	args := make(map[string]string)
 	
+	revel.Unbind(args, "category", category)
 	revel.Unbind(args, "id", id)
 	return revel.MainRouter.Reverse("Blog.RedirectToSlug", args).Url
-}
-
-func (_ tBlog) RedirectToPost(
-		id int,
-		slugString string,
-		) string {
-	args := make(map[string]string)
-	
-	revel.Unbind(args, "id", id)
-	revel.Unbind(args, "slugString", slugString)
-	return revel.MainRouter.Reverse("Blog.RedirectToPost", args).Url
-}
-
-
-type tApp struct {}
-var App tApp
-
-
-func (_ tApp) Index(
-		) string {
-	args := make(map[string]string)
-	
-	return revel.MainRouter.Reverse("App.Index", args).Url
 }
 
 

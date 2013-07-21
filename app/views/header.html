@@ -6,6 +6,6 @@
     <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link rel="stylesheet" type="text/css" href="/public/css/base.css">
-    {{if .result}}
-    <link rel="canonical" href="{{.rootUrl}}{{url "Blog.Show" .result.ShortID .result.Slug}}" />
+    {{if .canonical}}
+    <link rel="canonical" href="{{.rootUrl}}{{.canonical}}" />
     {{end}}

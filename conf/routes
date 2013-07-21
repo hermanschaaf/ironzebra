@@ -5,29 +5,29 @@
 module:testrunner
 
 GET     /                                       App.Index
+GET     /admin                                  App.Login
+POST    /admin/login                            Admin.Login
 
 GET     /posts/                                 Blog.List
 GET     /news/                                  Blog.ListAll
-GET     /news/:id                               Blog.RedirectToSlug
-GET     /news/:id/:slugString                   Blog.RedirectToPost
-GET     /posts/:id                              Blog.RedirectToSlug
-GET     /posts/:id/:slugString                  Blog.Show
 
-GET     /admin                                  Admin.Index
-POST    /login                                  Admin.Login
-GET     /logout                                 Admin.Logout
-GET     /edit/:id                               Admin.RedirectToSlug
-GET     /new                                    Admin.New
-GET     /edit/:id/:slugString                   Admin.Edit
-POST    /save/new                               Admin.SaveNew
-POST    /save/:id/                              Admin.Save
-POST    /publish/:id/                           Admin.Publish
-POST    /unpublish/:id/                         Admin.Unpublish
+GET     /admin/index                            Admin.Index
+GET     /admin/logout                           Admin.Logout
+GET     /admin/edit/:id                         Admin.RedirectToSlug
+GET     /admin/new                              Admin.New
+GET     /admin/edit/:id/:slugString             Admin.Edit
+POST    /admin/save/new                         Admin.SaveNew
+POST    /admin/save/:id/                        Admin.Save
+POST    /admin/publish/:id/                     Admin.Publish
+POST    /admin/unpublish/:id/                   Admin.Unpublish
+GET     /admin/categories                       Admin.Categories
+POST    /admin/categories/new                   Admin.NewCategory
 
 GET     /favicon.ico                            Static.Serve("public/images","favicon.png")
 
 # Map static resources from the /app/public folder to the /public path
 GET     /public/*filepath                       Static.Serve("public")
 
-# Catch all
-*       /:controller/:action                    :controller.:action
+GET     /:category/                             Blog.ListCategory
+GET     /:category/:id                          Blog.RedirectToSlug
+GET     /:category/:id/:slugString              Blog.Show

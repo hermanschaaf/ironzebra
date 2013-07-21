@@ -22,7 +22,14 @@ p {
     font-weight: 400;
     color: #333332;
     font-size: 22px;
-    line-height: 1.4;
+    line-height: 1.4em;
+}
+code, pre {
+    font-size: 14px;
+}
+ul, li {
+    font-size: 22px; 
+    line-height: 1.4em;
 }
 .page {
     margin-top: 30px;
@@ -31,6 +38,10 @@ p {
     margin-top: 15px;
     text-align: right;
     padding-right: 20px;
+}
+.sidebar-menu {
+    list-style-type: none;
+    margin-top: 20px;
 }
 .author {
     padding: 10px 0;
@@ -45,6 +56,12 @@ p {
     font-size: 0.9em;
     color: #666;
 }
+.tags {
+    font-size: 16px;
+}
+.admin {
+    margin-top: 20px;
+}
 .admin .btn {
     margin-bottom: 10px;
 }
@@ -56,12 +73,15 @@ p {
 }
 .postlist .post {
     border-bottom: 1px solid #ccc;
+    padding-bottom: 10px;
 }
 .postlist .post .title {
     font-size: 32px;
 }
 .postlist .post .subtitle {
+    line-height: 40px;
     font-size: 18px;
+    margin-bottom: 4px;
 }
 .postlist .post.unpublished .title {
     font-size: 18px;

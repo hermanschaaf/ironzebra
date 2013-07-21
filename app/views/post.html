@@ -15,6 +15,9 @@
                     <a class="name" href="/">Herman Schaaf</a>
                     <time datetime="2013-11-13">{{formatDate .result.Timestamp }}</time>
                 </div>
+                <div class="tags">
+                    under <a href="{{url "Blog.ListCategory" .result.Category}}">{{.result.Category}}</a>
+                </div>
                 {{if .isAdmin}}
                 <div class="admin">
                     <ul>

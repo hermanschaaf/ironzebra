@@ -16,7 +16,7 @@
 
                 <hr/>
 
-                {{if .result.ShortID}}<p>You might also like my latest blog post, <a href="{{url "Blog.Show" .result.ShortID .result.Slug }}">{{.result.Title}}</a></p>{{end}}
+                {{if .result.ShortID}}<p>You might also like my latest blog post, <a href="{{url "Blog.Show" .result.Category .result.ShortID .result.Slug }}">{{.result.Title}}</a></p>{{end}}
             </div>
         </div>
     </div>

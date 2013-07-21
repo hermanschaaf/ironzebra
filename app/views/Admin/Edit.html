@@ -15,6 +15,18 @@
                                 <input type="text" id="subtitle" name="subtitle" value="{{.result.Subtitle}}"/>
                             </div>
                         </div>
+                        <div class="control-group">
+                            <label class="control-label" for="category">Category</label>
+                            <div class="controls">
+                                <select id="title" name="category" >
+                                    <option value="post">post</option>
+                                {{$result := .result}}
+                                {{range .categoryList}}
+                                    <option value="{{.Name}}" {{if eq $result.Category .Name}}selected="selected"{{end}}>{{.Name}}</option>
+                                {{end}}
+                                </select>
+                            </div>
+                        </div>
                         {{if .result.ShortID}}
                         <div class="control-group">
                             <label class="control-label" for="slugstring">Slug</label>

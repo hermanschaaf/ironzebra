@@ -17,10 +17,10 @@ type Admin struct {
 	revmgo.MongoController
 }
 
-func addPost(database *mgo.Database, collection *mgo.Collection, title, subtitle, slug, body string) (post models.Post) {
+func addPost(database *mgo.Database, collection *mgo.Collection, title, subtitle, slug, category, body string) (post models.Post) {
 	// Index
 	index := mgo.Index{
-		Key:        []string{"shortid", "timestamp", "title", "tags"},
+		Key:        []string{"shortid", "timestamp", "title"},
 		Unique:     true,
 		DropDups:   true,
 		Background: true,
@@ -36,6 +36,7 @@ func addPost(database *mgo.Database, collection *mgo.Collection, title, subtitle
 	err = collection.Insert(&models.Post{
 		ShortID:   models.GetNextSequence(database),
 		Title:     title,
+		Category:  category,
 		Slug:      slug,
 		Subtitle:  subtitle,
 		Body:      body,
@@ -51,12 +52,13 @@ func addPost(database *mgo.Database, collection *mgo.Collection, title, subtitle
 	return result
 }
 
-func savePost(collection *mgo.Collection, shortID int, title, subtitle, slugString, body string) (post models.Post) {
+func savePost(collection *mgo.Collection, shortID int, title, subtitle, slugString, category, body string) (post models.Post) {
 	// Update Dataz
 	err := collection.Update(bson.M{"shortid": shortID}, bson.M{
 		"$set": bson.M{
 			"title":    title,
 			"subtitle": subtitle,
+			"category": category,
 			"slug":     slugString,
 			"body":     body,
 		},
@@ -71,24 +73,15 @@ func savePost(collection *mgo.Collection, shortID int, title, subtitle, slugStri
 	return result
 }
 
-func (c Admin) Index() revel.Result {
-	username, loggedIn := c.Session["username"]
-	name, _ := c.Session["name"]
-	if loggedIn == true {
-		collection := c.Database.C("posts")
-		postList := []models.Post{}
-		iter := collection.Find(nil).Iter()
-		iter.All(&postList)
-		return c.Render(username, name, loggedIn, postList)
-	}
-	return c.Render(loggedIn)
-}
-
 func (c Admin) getUser(username string) *models.User {
 	users := c.Database.C("users")
 	result := models.User{}
 	users.Find(bson.M{"username": username}).One(&result)
 	return &result
+}
+
+func (c Admin) Index() revel.Result {
+	return c.Render()
 }
 
 func (c Admin) Login(username, password string) revel.Result {
@@ -129,7 +122,7 @@ func (c Admin) Edit(id int, slug string) revel.Result {
 
 	// if the slug is wrong, redirect to correct slug
 	if result.Slug != slug {
-		return c.Redirect(routes.Blog.Show(id, result.Slug))
+		return c.Redirect(routes.Blog.Show(result.Category, id, result.Slug))
 	}
 
 	// TODO: this is a bit of a hack
@@ -139,35 +132,47 @@ func (c Admin) Edit(id int, slug string) revel.Result {
 
 	newPost := !result.Published
 
-	return c.Render(result, newPost)
+	categoryList := []models.Category{}
+	collection = c.Database.C("categories")
+	iter := collection.Find(nil).Sort("name").Iter()
+	iter.All(&categoryList)
+
+	return c.Render(result, categoryList, newPost)
 }
 
 func (c Admin) New() revel.Result {
-	return c.Render()
+	/* Create a new post */
+	categoryList := []models.Category{}
+	collection := c.Database.C("categories")
+	iter := collection.Find(nil).Sort("name").Iter()
+	iter.All(&categoryList)
+	newPost := true
+	return c.Render(categoryList, newPost)
 }
 
-func validatePost(c Admin, title, body, slugString string) {
+func validatePost(c Admin, title, body, slugString, category string) {
 	c.Validation.Required(title).Message("A title is required")
 	c.Validation.Required(body).Message("You probably want some text in your post, no?")
 	c.Validation.Required(slugString).Message("You need a slug...")
+	c.Validation.Required(category).Message("You need to choose a category")
 }
 
-func (c Admin) SaveNew(title, subtitle, body string) revel.Result {
+func (c Admin) SaveNew(title, subtitle, category, body string) revel.Result {
 	slugString := slug.Make(title)
-	validatePost(c, title, body, slugString)
+	validatePost(c, title, body, slugString, category)
 	collection := c.Database.C("posts")
-	result := addPost(c.Database, collection, title, subtitle, slugString, body)
-	return c.Redirect(routes.Blog.Show(result.ShortID, result.Slug))
+	result := addPost(c.Database, collection, title, subtitle, slugString, category, body)
+	return c.Redirect(routes.Blog.Show(result.Category, result.ShortID, result.Slug))
 }
 
-func (c Admin) Save(id int, title, subtitle, slugString, body, publish string) revel.Result {
-	validatePost(c, title, body, slugString)
+func (c Admin) Save(id int, title, subtitle, slugString, category, body, publish string) revel.Result {
+	validatePost(c, title, body, slugString, category)
 	collection := c.Database.C("posts")
 	if slugString == "" {
 		slugString = slug.Make(title)
 	}
-	result := savePost(collection, id, title, subtitle, slugString, body)
-	return c.Redirect(routes.Blog.Show(result.ShortID, result.Slug))
+	result := savePost(collection, id, title, subtitle, slugString, category, body)
+	return c.Redirect(routes.Blog.Show(result.Category, result.ShortID, result.Slug))
 }
 
 func (c Admin) RedirectToSlug(id int) revel.Result {
@@ -181,7 +186,7 @@ func (c Admin) Publish(id int) revel.Result {
 
 	result := models.Post{}
 	collection.Find(bson.M{"shortid": id}).One(&result)
-	return c.Redirect(routes.Blog.Show(result.ShortID, result.Slug))
+	return c.Redirect(routes.Blog.Show(result.Category, result.ShortID, result.Slug))
 }
 
 func (c Admin) Unpublish(id int) revel.Result {
@@ -191,7 +196,38 @@ func (c Admin) Unpublish(id int) revel.Result {
 
 	result := models.Post{}
 	collection.Find(bson.M{"shortid": id}).One(&result)
-	return c.Redirect(routes.Blog.Show(result.ShortID, result.Slug))
+	return c.Redirect(routes.Blog.Show(result.Category, result.ShortID, result.Slug))
+}
+
+func (c Admin) Categories() revel.Result {
+	categoryList := []models.Category{}
+	collection := c.Database.C("categories")
+	iter := collection.Find(nil).Sort("name").Iter()
+	iter.All(&categoryList)
+	return c.Render(categoryList)
+}
+
+func (c Admin) NewCategory(name, description string) revel.Result {
+	collection := c.Database.C("categories")
+	err := collection.Insert(&models.Category{
+		Name:        name,
+		Description: description,
+	})
+	if err != nil {
+		panic(err)
+	}
+	index := mgo.Index{
+		Key:        []string{"name"},
+		Unique:     true,
+		DropDups:   true,
+		Background: true,
+		Sparse:     true,
+	}
+	err = collection.EnsureIndex(index)
+	if err != nil {
+		panic(err)
+	}
+	return c.Redirect(routes.Admin.Categories())
 }
 
 func (c Admin) AddImages() revel.Result {
