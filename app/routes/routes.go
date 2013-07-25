@@ -56,6 +56,36 @@ func (_ tBlog) RedirectToSlug(
 }
 
 
+type tApp struct {}
+var App tApp
+
+
+func (_ tApp) Index(
+		) string {
+	args := make(map[string]string)
+	
+	return revel.MainRouter.Reverse("App.Index", args).Url
+}
+
+func (_ tApp) Login(
+		) string {
+	args := make(map[string]string)
+	
+	return revel.MainRouter.Reverse("App.Login", args).Url
+}
+
+func (_ tApp) LoginPost(
+		username string,
+		password string,
+		) string {
+	args := make(map[string]string)
+	
+	revel.Unbind(args, "username", username)
+	revel.Unbind(args, "password", password)
+	return revel.MainRouter.Reverse("App.LoginPost", args).Url
+}
+
+
 type tAdmin struct {}
 var Admin tAdmin
 
@@ -65,17 +95,6 @@ func (_ tAdmin) Index(
 	args := make(map[string]string)
 	
 	return revel.MainRouter.Reverse("Admin.Index", args).Url
-}
-
-func (_ tAdmin) Login(
-		username string,
-		password string,
-		) string {
-	args := make(map[string]string)
-	
-	revel.Unbind(args, "username", username)
-	revel.Unbind(args, "password", password)
-	return revel.MainRouter.Reverse("Admin.Login", args).Url
 }
 
 func (_ tAdmin) Logout(
@@ -189,25 +208,6 @@ func (_ tAdmin) AddImages(
 	args := make(map[string]string)
 	
 	return revel.MainRouter.Reverse("Admin.AddImages", args).Url
-}
-
-
-type tApp struct {}
-var App tApp
-
-
-func (_ tApp) Index(
-		) string {
-	args := make(map[string]string)
-	
-	return revel.MainRouter.Reverse("App.Index", args).Url
-}
-
-func (_ tApp) Login(
-		) string {
-	args := make(map[string]string)
-	
-	return revel.MainRouter.Reverse("App.Login", args).Url
 }
 
 
