@@ -109,6 +109,9 @@ ul, li {
     border: 0;
     background: transparent url(/public/images/gopher.png) no-repeat top right;
 }
+.closing-text {
+    margin-top: 40px;
+}
 @media (max-width: 1200px) {
     .sidebar {
         text-align: center;

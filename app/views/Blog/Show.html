@@ -6,6 +6,8 @@
 
 {{ .html_output }}
 
+{{template "Blog/footer.html" .}}
+
 {{if eq .result.Category "code"}}
 <a href="https://github.com/hermanschaaf/ironzebra"><img class="fork-image" src="/public/images/forkme_right_darkblue_121621.png" title="Fork the Golang IronZebra blog on Github (Gopher Image adapted from Google's Golang logo)" alt="Fork Herman Schaaf's IronZebra blog on GitHub"></a>
 {{end}}
