@@ -43,6 +43,9 @@ ul, li {
     list-style-type: none;
     margin-top: 20px;
 }
+.rss-link img {
+    margin-top: -2px;
+}
 .author {
     padding: 10px 0;
     font-size: 16px;
