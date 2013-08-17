@@ -11,12 +11,12 @@ package main
 
 import (
 	"bufio"
+	"flag"
 	"fmt"
 	"github.com/hermanschaaf/ironzebra/app/management"
 	"github.com/hermanschaaf/revmgo"
 	"github.com/robfig/revel"
 	"os"
-    "flag"
 	"strings"
 )
 
@@ -26,8 +26,8 @@ func printHelp() {
 	fmt.Println("--------------------------")
 	fmt.Println("adduser   [Create a new user]")
 	fmt.Println("")
-    fmt.Println("Options:")
-    flag.PrintDefaults()
+	fmt.Println("Options:")
+	flag.PrintDefaults()
 	fmt.Println("\n")
 }
 
@@ -42,9 +42,9 @@ func loadApp(args []string, mode string) {
 
 func main() {
 
-    var ip = flag.String("mode", "dev", "Specify which mode to use in app.conf")
-    flag.Parse()
-    var args = flag.Args()
+	var ip = flag.String("mode", "dev", "Specify which mode to use in app.conf")
+	flag.Parse()
+	var args = flag.Args()
 
 	if len(args) >= 2 {
 		switch args[1] {
