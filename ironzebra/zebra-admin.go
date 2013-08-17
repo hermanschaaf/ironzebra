@@ -16,19 +16,22 @@ import (
 	"github.com/hermanschaaf/revmgo"
 	"github.com/robfig/revel"
 	"os"
+    "flag"
 	"strings"
 )
 
 func printHelp() {
-	fmt.Println("\nzebra-admin your/app/path [command]\n")
+	fmt.Println("\nzebra-admin [OPTIONS] your/app/path [command]\n")
 	fmt.Println("List of possible commands:")
 	fmt.Println("--------------------------")
 	fmt.Println("adduser   [Create a new user]")
+	fmt.Println("")
+    fmt.Println("Options:")
+    flag.PrintDefaults()
 	fmt.Println("\n")
 }
 
-func loadApp(args []string) {
-	mode := "dev"
+func loadApp(args []string, mode string) {
 
 	// Find and parse app.conf
 	revel.Init(mode, args[0], "")
@@ -38,14 +41,17 @@ func loadApp(args []string) {
 }
 
 func main() {
-	args := os.Args[1:]
+
+    var ip = flag.String("mode", "dev", "Specify which mode to use in app.conf")
+    flag.Parse()
+    var args = flag.Args()
 
 	if len(args) >= 2 {
 		switch args[1] {
 		case "adduser":
 
 			fmt.Println("Loading configuration...")
-			loadApp(args)
+			loadApp(args, *ip)
 
 			var name, username, password string
 			reader := bufio.NewReader(os.Stdin)
