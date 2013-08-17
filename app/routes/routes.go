@@ -4,6 +4,95 @@ package routes
 import "github.com/robfig/revel"
 
 
+type tApp struct {}
+var App tApp
+
+
+func (_ tApp) Index(
+		) string {
+	args := make(map[string]string)
+	
+	return revel.MainRouter.Reverse("App.Index", args).Url
+}
+
+func (_ tApp) Login(
+		) string {
+	args := make(map[string]string)
+	
+	return revel.MainRouter.Reverse("App.Login", args).Url
+}
+
+func (_ tApp) LoginPost(
+		username string,
+		password string,
+		) string {
+	args := make(map[string]string)
+	
+	revel.Unbind(args, "username", username)
+	revel.Unbind(args, "password", password)
+	return revel.MainRouter.Reverse("App.LoginPost", args).Url
+}
+
+
+type tBlog struct {}
+var Blog tBlog
+
+
+func (_ tBlog) RSS(
+		) string {
+	args := make(map[string]string)
+	
+	return revel.MainRouter.Reverse("Blog.RSS", args).Url
+}
+
+func (_ tBlog) List(
+		) string {
+	args := make(map[string]string)
+	
+	return revel.MainRouter.Reverse("Blog.List", args).Url
+}
+
+func (_ tBlog) ListAll(
+		) string {
+	args := make(map[string]string)
+	
+	return revel.MainRouter.Reverse("Blog.ListAll", args).Url
+}
+
+func (_ tBlog) ListCategory(
+		category string,
+		) string {
+	args := make(map[string]string)
+	
+	revel.Unbind(args, "category", category)
+	return revel.MainRouter.Reverse("Blog.ListCategory", args).Url
+}
+
+func (_ tBlog) Show(
+		category string,
+		id int,
+		slugString string,
+		) string {
+	args := make(map[string]string)
+	
+	revel.Unbind(args, "category", category)
+	revel.Unbind(args, "id", id)
+	revel.Unbind(args, "slugString", slugString)
+	return revel.MainRouter.Reverse("Blog.Show", args).Url
+}
+
+func (_ tBlog) RedirectToSlug(
+		category string,
+		id int,
+		) string {
+	args := make(map[string]string)
+	
+	revel.Unbind(args, "category", category)
+	revel.Unbind(args, "id", id)
+	return revel.MainRouter.Reverse("Blog.RedirectToSlug", args).Url
+}
+
+
 type tAdmin struct {}
 var Admin tAdmin
 
@@ -129,85 +218,33 @@ func (_ tAdmin) AddImages(
 }
 
 
-type tBlog struct {}
-var Blog tBlog
+type tTestRunner struct {}
+var TestRunner tTestRunner
 
 
-func (_ tBlog) List(
+func (_ tTestRunner) Index(
 		) string {
 	args := make(map[string]string)
 	
-	return revel.MainRouter.Reverse("Blog.List", args).Url
+	return revel.MainRouter.Reverse("TestRunner.Index", args).Url
 }
 
-func (_ tBlog) ListAll(
+func (_ tTestRunner) Run(
+		suite string,
+		test string,
 		) string {
 	args := make(map[string]string)
 	
-	return revel.MainRouter.Reverse("Blog.ListAll", args).Url
+	revel.Unbind(args, "suite", suite)
+	revel.Unbind(args, "test", test)
+	return revel.MainRouter.Reverse("TestRunner.Run", args).Url
 }
 
-func (_ tBlog) ListCategory(
-		category string,
+func (_ tTestRunner) List(
 		) string {
 	args := make(map[string]string)
 	
-	revel.Unbind(args, "category", category)
-	return revel.MainRouter.Reverse("Blog.ListCategory", args).Url
-}
-
-func (_ tBlog) Show(
-		category string,
-		id int,
-		slugString string,
-		) string {
-	args := make(map[string]string)
-	
-	revel.Unbind(args, "category", category)
-	revel.Unbind(args, "id", id)
-	revel.Unbind(args, "slugString", slugString)
-	return revel.MainRouter.Reverse("Blog.Show", args).Url
-}
-
-func (_ tBlog) RedirectToSlug(
-		category string,
-		id int,
-		) string {
-	args := make(map[string]string)
-	
-	revel.Unbind(args, "category", category)
-	revel.Unbind(args, "id", id)
-	return revel.MainRouter.Reverse("Blog.RedirectToSlug", args).Url
-}
-
-
-type tApp struct {}
-var App tApp
-
-
-func (_ tApp) Index(
-		) string {
-	args := make(map[string]string)
-	
-	return revel.MainRouter.Reverse("App.Index", args).Url
-}
-
-func (_ tApp) Login(
-		) string {
-	args := make(map[string]string)
-	
-	return revel.MainRouter.Reverse("App.Login", args).Url
-}
-
-func (_ tApp) LoginPost(
-		username string,
-		password string,
-		) string {
-	args := make(map[string]string)
-	
-	revel.Unbind(args, "username", username)
-	revel.Unbind(args, "password", password)
-	return revel.MainRouter.Reverse("App.LoginPost", args).Url
+	return revel.MainRouter.Reverse("TestRunner.List", args).Url
 }
 
 
@@ -237,36 +274,6 @@ func (_ tStatic) ServeModule(
 	revel.Unbind(args, "prefix", prefix)
 	revel.Unbind(args, "filepath", filepath)
 	return revel.MainRouter.Reverse("Static.ServeModule", args).Url
-}
-
-
-type tTestRunner struct {}
-var TestRunner tTestRunner
-
-
-func (_ tTestRunner) Index(
-		) string {
-	args := make(map[string]string)
-	
-	return revel.MainRouter.Reverse("TestRunner.Index", args).Url
-}
-
-func (_ tTestRunner) Run(
-		suite string,
-		test string,
-		) string {
-	args := make(map[string]string)
-	
-	revel.Unbind(args, "suite", suite)
-	revel.Unbind(args, "test", test)
-	return revel.MainRouter.Reverse("TestRunner.Run", args).Url
-}
-
-func (_ tTestRunner) List(
-		) string {
-	args := make(map[string]string)
-	
-	return revel.MainRouter.Reverse("TestRunner.List", args).Url
 }
 
 

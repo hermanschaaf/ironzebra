@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"github.com/gorilla/feeds"
 	"github.com/hermanschaaf/ironzebra/app/models"
 	"github.com/hermanschaaf/ironzebra/app/routes"
 	"github.com/hermanschaaf/revmgo"
@@ -8,7 +9,16 @@ import (
 	"github.com/russross/blackfriday"
 	"html/template"
 	"labix.org/v2/mgo/bson"
+	"net/http"
+	"time"
 )
+
+type RssXml string
+
+func (r RssXml) Apply(req *revel.Request, resp *revel.Response) {
+	resp.WriteHeader(http.StatusOK, "application/xml")
+	resp.Out.Write([]byte(r))
+}
 
 type Blog struct {
 	*revel.Controller
@@ -43,6 +53,43 @@ func getCategories(c Blog) []models.Category {
 	iter := collection.Find(nil).Sort("name").Iter()
 	iter.All(&categoryList)
 	return categoryList
+}
+
+func (c Blog) RSS() revel.Result {
+	c.Response.ContentType = "application/xml"
+
+	postList := getPosts(c, 20, "", false)
+
+	postsPath := routes.Blog.List()
+	rootUrl, _ := revel.Config.String("zebra.root_url")
+	rssTitle, _ := revel.Config.String("zebra.rss_title")
+	rssDescription, _ := revel.Config.String("zebra.rss_description")
+	rssAuthor, _ := revel.Config.String("zebra.rss_author")
+	rssEmail, _ := revel.Config.String("zebra.rss_email")
+
+	feed := &feeds.Feed{
+		Title:       rssTitle,
+		Link:        &feeds.Link{Href: rootUrl + postsPath},
+		Description: rssDescription,
+		Author:      &feeds.Author{rssAuthor, rssEmail},
+		Created:     time.Now(),
+	}
+
+	feed.Items = []*feeds.Item{}
+	for _, post := range postList {
+		postPath := routes.Blog.Show(post.Category, post.ShortID, post.Slug)
+
+		feed.Items = append(feed.Items,
+			&feeds.Item{
+				Title:       post.Title,
+				Link:        &feeds.Link{Href: rootUrl + postPath},
+				Description: post.Subtitle,
+				Author:      &feeds.Author{rssAuthor, rssEmail},
+				Created:     post.Timestamp,
+			})
+	}
+	rss, _ := feed.ToRss()
+	return RssXml(rss)
 }
 
 func (c Blog) List() revel.Result {

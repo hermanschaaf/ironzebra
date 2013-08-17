@@ -18,6 +18,10 @@
                 <div class="tags">
                     under <a href="{{url "Blog.ListCategory" .result.Category}}">{{.result.Category}}</a>
                 </div>
+                <hr />
+                <div class="rss-link">
+                    <a href="{{url "Blog.RSS" }}"><img src="/public/images/rss.png"/></a> <a href="{{url "Blog.RSS" }}">RSS</a>
+                </div>
                 {{if .isAdmin}}
                 <div class="admin">
                     <ul>
