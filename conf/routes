@@ -10,6 +10,8 @@ POST    /admin                                  App.LoginPost
 
 GET     /posts/                                 Blog.List
 GET     /news/                                  Blog.ListAll
+GET     /rss                                    Blog.RSS
+GET     /sitenews                               Blog.RSS
 
 GET     /admin/index                            Admin.Index
 GET     /admin/logout                           Admin.Logout
