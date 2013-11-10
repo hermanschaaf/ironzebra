@@ -1,46 +1,66 @@
 {{template "Admin/base.html" .}}
             <div class="span6">
-                <form method="post" accept-charset="utf-8" class="form-vertical" action="{{if .result.ShortID}}{{url "Admin.Save" .result.ShortID}}{{else}}{{url "Admin.SaveNew"}}{{end}}">
+                <form method="post" accept-charset="utf-8" class="form-vertical" action="{{if .result.ShortID}}{{url `Admin.Save` .result.ShortID}}{{else}}{{url `Admin.SaveNew`}}{{end}}">
                     <fieldset>
                         <legend>{{.verb}} Post</legend>
-                        <div class="control-group">
+                        {{$result := .result}}
+                        {{with $field := field "title" .}}
+                        <div class="control-group {{$field.ErrorClass}}">
                             <label class="control-label" for="title">Title</label>
                             <div class="controls">
-                                <input type="text" id="title" name="title" value="{{.result.Title}}"/>
+                                <input type="text" id="title" name="{{$field.Name}}" value="{{if $field.Flash}}{{$field.Flash}}{{else}}{{$result.Title}}{{end}}"/>
                             </div>
                         </div>
-                        <div class="control-group">
-                            <label class="control-label" for="subtitle">Subtitle</label>
+                        {{end}}
+                        {{with $field := field "subtitle" .}}
+                        <div class="control-group {{$field.ErrorClass}}">
+                            <label class="control-label" for="subtitle">Subtitle (optional)</label>
                             <div class="controls">
-                                <input type="text" id="subtitle" name="subtitle" value="{{.result.Subtitle}}"/>
+                                <input type="text" id="subtitle" name="{{$field.Name}}" value="{{if $field.Flash}}{{$field.Flash}}{{else}}{{$result.Subtitle}}{{end}}"/>
                             </div>
                         </div>
-                        <div class="control-group">
+                        {{end}}
+                        {{with $field := field "image" .}}
+                        <div class="control-group {{$field.ErrorClass}}">
+                            <label class="control-label" for="image">Image URL (optional)</label>
+                            <div class="controls">
+                                <input type="text" id="image" name="{{$field.Name}}" value="{{if $field.Flash}}{{$field.Flash}}{{else}}{{$result.Image}}{{end}}"/>
+                            </div>
+                        </div>
+                        {{end}}
+                        {{$categoryList := .categoryList}}
+                        {{with $field := field "category" .}}
+                        <div class="control-group {{$field.ErrorClass}}">
                             <label class="control-label" for="category">Category</label>
                             <div class="controls">
-                                <select id="title" name="category" >
+                                <select id="title" name="{{$field.Name}}" >
                                     <option value="post">post</option>
-                                {{$result := .result}}
-                                {{range .categoryList}}
-                                    <option value="{{.Name}}" {{if eq $result.Category .Name}}selected="selected"{{end}}>{{.Name}}</option>
+
+                                {{range $categoryList}}
+                                    <option value="{{.Name}}" {{if $field.Flash}}{{if eq $field.Flash .Name}}selected="selected"{{end}}{{else}}{{if eq $result.Title .Name}}selected="selected"{{end}}{{end}}>{{.Name}}</option>
                                 {{end}}
                                 </select>
                             </div>
                         </div>
+                        {{end}}
                         {{if .result.ShortID}}
+                        {{with $field := field "slug" .}}
                         <div class="control-group">
                             <label class="control-label" for="slugstring">Slug</label>
                             <div class="controls">
-                                <input type="text" id="slugstring" name="slugString" value="{{.result.Slug}}"/>
+                                <input type="text" id="slugstring" name="slugString" value="{{if $field.Flash}}{{$field.Flash}}{{else}}{{$result.Slug}}{{end}}"/>
                             </div>
                         </div>
                         {{end}}
-                        <div class="control-group">
+                        {{end}}
+                        {{with $field := field "body" .}}
+                        <div class="control-group {{$field.ErrorClass}}">
                             <label class="control-label" for="body">Body (<a href="http://daringfireball.net/projects/markdown/syntax" target="_blank">Markdown Syntax</a>)</label>
                             <div class="controls">
-                                <textarea id="body" name="body">{{.result.Body}}</textarea>
+                                <textarea id="body" name="{{$field.Name}}">{{if $field.Flash}}{{$field.Flash}}{{else}}{{$result.Body}}{{end}}</textarea>
                             </div>
                         </div>
+                        {{end}}
                     </fieldset>
                     <div class="text-right">
                         {{if .newPost}}
