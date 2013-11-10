@@ -11,6 +11,7 @@ type Post struct {
 	ShortID   int
 	Title     string
 	Subtitle  string
+	Image     string
 	Slug      string
 	Body      string
 	Category  string

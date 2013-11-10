@@ -16,7 +16,7 @@ type Admin struct {
 	revmgo.MongoController
 }
 
-func addPost(database *mgo.Database, collection *mgo.Collection, title, subtitle, slug, category, body string) (post models.Post) {
+func addPost(database *mgo.Database, collection *mgo.Collection, title, subtitle, slug, category, body, image string) (post models.Post) {
 	// Index
 	index := mgo.Index{
 		Key:        []string{"shortid", "timestamp", "title"},
@@ -51,7 +51,7 @@ func addPost(database *mgo.Database, collection *mgo.Collection, title, subtitle
 	return result
 }
 
-func savePost(collection *mgo.Collection, shortID int, title, subtitle, slugString, category, body string) (post models.Post) {
+func savePost(collection *mgo.Collection, shortID int, title, subtitle, slugString, category, body, image string) (post models.Post) {
 	// Update Dataz
 	err := collection.Update(bson.M{"shortid": shortID}, bson.M{
 		"$set": bson.M{
@@ -60,6 +60,7 @@ func savePost(collection *mgo.Collection, shortID int, title, subtitle, slugStri
 			"category": category,
 			"slug":     slugString,
 			"body":     body,
+			"image":    image,
 		},
 	})
 
@@ -131,21 +132,33 @@ func validatePost(c Admin, title, body, slugString, category string) {
 	c.Validation.Required(category).Message("You need to choose a category")
 }
 
-func (c Admin) SaveNew(title, subtitle, category, body string) revel.Result {
+func (c Admin) SaveNew(title, subtitle, category, body, image string) revel.Result {
 	slugString := slug.Make(title)
 	validatePost(c, title, body, slugString, category)
+	if c.Validation.HasErrors() {
+		// Store the validation errors in the flash context and redirect.
+		c.Validation.Keep()
+		c.FlashParams()
+		return c.Redirect(routes.Admin.New())
+	}
 	collection := c.Database.C("posts")
-	result := addPost(c.Database, collection, title, subtitle, slugString, category, body)
+	result := addPost(c.Database, collection, title, subtitle, slugString, category, body, image)
 	return c.Redirect(routes.Blog.Show(result.Category, result.ShortID, result.Slug))
 }
 
-func (c Admin) Save(id int, title, subtitle, slugString, category, body, publish string) revel.Result {
+func (c Admin) Save(id int, title, subtitle, slugString, category, body, publish, image string) revel.Result {
 	validatePost(c, title, body, slugString, category)
+	if c.Validation.HasErrors() {
+		// Store the validation errors in the flash context and redirect.
+		c.Validation.Keep()
+		c.FlashParams()
+		return c.Redirect(routes.Admin.Edit(id, slugString))
+	}
 	collection := c.Database.C("posts")
 	if slugString == "" {
 		slugString = slug.Make(title)
 	}
-	result := savePost(collection, id, title, subtitle, slugString, category, body)
+	result := savePost(collection, id, title, subtitle, slugString, category, body, image)
 	return c.Redirect(routes.Blog.Show(result.Category, result.ShortID, result.Slug))
 }
 
@@ -202,8 +215,4 @@ func (c Admin) NewCategory(name, description string) revel.Result {
 		panic(err)
 	}
 	return c.Redirect(routes.Admin.Categories())
-}
-
-func (c Admin) AddImages() revel.Result {
-	return c.Render()
 }

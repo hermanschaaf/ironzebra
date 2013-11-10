@@ -21,6 +21,7 @@ func (c Admin) checkUser() revel.Result {
 }
 
 func init() {
+	revel.ERROR_CLASS = "error"
 	revmgo.ControllerInit()
 	revel.InterceptMethod(Admin.checkUser, revel.BEFORE)
 }
