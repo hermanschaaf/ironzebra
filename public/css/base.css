@@ -99,6 +99,10 @@ ul, li {
     text-decoration: none;
     color: #666;
 }
+.post-image {
+    max-width: 100%;
+    margin: 15px 0;
+}
 .full-list-link {
     font-size: 22px;
     font-weight: bold;
