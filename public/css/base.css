@@ -17,7 +17,7 @@ h2 {
 h2.subtitle {
     margin: 10px 0 30px;
 }
-p {
+p, ul, li {
     font-family: Georgia,Cambria,"Times New Roman",Times,serif;
     font-weight: 400;
     color: #333332;
@@ -98,6 +98,10 @@ ul, li {
 .postlist a:hover {
     text-decoration: none;
     color: #666;
+}
+.post-image {
+    max-width: 100%;
+    margin: 15px 0;
 }
 .full-list-link {
     font-size: 22px;

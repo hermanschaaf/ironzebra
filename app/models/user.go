@@ -35,7 +35,6 @@ func (user *User) Validate(v *revel.Validation) {
 func ValidatePassword(v *revel.Validation, password string) *revel.ValidationResult {
 	return v.Check(password,
 		revel.Required{},
-		revel.MaxSize{15},
 		revel.MinSize{5},
 	)
 }
