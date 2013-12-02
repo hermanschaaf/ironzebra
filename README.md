@@ -40,3 +40,10 @@ otherwise just commit your changes to git and run
 
     git push heroku master
 
+News
+----------
+
+ - 17 August 2013 
+
+   Added RSS feed, available at /rss
+   Working on i18n, but the support from Revel is a bit lacking
