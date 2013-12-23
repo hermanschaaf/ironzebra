@@ -8,6 +8,7 @@ import (
 	"github.com/robfig/revel"
 	"labix.org/v2/mgo"
 	"labix.org/v2/mgo/bson"
+	"strings"
 	"time"
 )
 
@@ -19,7 +20,7 @@ type Admin struct {
 func addPost(database *mgo.Database, collection *mgo.Collection, title, subtitle, slug, category, body, image string) (post models.Post) {
 	// Index
 	index := mgo.Index{
-		Key:        []string{"shortid", "timestamp", "title"},
+		Key:        []string{"shortid", "timestamp", "title", "tags"},
 		Unique:     true,
 		DropDups:   true,
 		Background: true,
@@ -160,6 +161,26 @@ func (c Admin) Save(id int, title, subtitle, slugString, category, body, publish
 	}
 	result := savePost(collection, id, title, subtitle, slugString, category, body, image)
 	return c.Redirect(routes.Blog.Show(result.Category, result.ShortID, result.Slug))
+}
+
+func (c Admin) SaveTags(shortid int, tags string) revel.Result {
+	collection := c.Database.C("posts")
+	tagList := strings.Split(tags, ",")
+	for t := range tagList {
+		tagList[t] = strings.Trim(tagList[t], " ")
+	}
+	err := collection.Update(bson.M{"shortid": shortid}, bson.M{
+		"$set": bson.M{
+			"tags": tagList,
+		},
+	})
+	if err != nil {
+		panic(err)
+	}
+	result := models.Post{}
+	collection.Find(bson.M{"shortid": shortid}).One(&result)
+
+	return c.RenderJson(bson.M{"success": true})
 }
 
 func (c Admin) RedirectToSlug(id int) revel.Result {

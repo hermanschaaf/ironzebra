@@ -27,6 +27,9 @@
                 </div>
             </div>
             <div class="span6">
+                {{if .currentTag}}
+                <div class="alert alert-info">Posts in <strong><a href="{{url "Blog.ListCategory" .currentCategory}}">{{.currentCategory}}</a></strong> related to <strong><a href="{{url "Blog.ListTag" .currentCategory .currentTag}}">{{.currentTag}}</a></strong></div>
+                {{end}}
                 <div class="postlist">
                     {{$isAdmin := .isAdmin}}
                     {{range .postList}}

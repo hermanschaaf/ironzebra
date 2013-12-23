@@ -38,6 +38,17 @@ func (_ tBlog) ListCategory(
 	return revel.MainRouter.Reverse("Blog.ListCategory", args).Url
 }
 
+func (_ tBlog) ListTag(
+		category string,
+		tag string,
+		) string {
+	args := make(map[string]string)
+	
+	revel.Unbind(args, "category", category)
+	revel.Unbind(args, "tag", tag)
+	return revel.MainRouter.Reverse("Blog.ListTag", args).Url
+}
+
 func (_ tBlog) Show(
 		category string,
 		id int,
@@ -169,6 +180,17 @@ func (_ tAdmin) Save(
 	return revel.MainRouter.Reverse("Admin.Save", args).Url
 }
 
+func (_ tAdmin) SaveTags(
+		shortid int,
+		tags string,
+		) string {
+	args := make(map[string]string)
+	
+	revel.Unbind(args, "shortid", shortid)
+	revel.Unbind(args, "tags", tags)
+	return revel.MainRouter.Reverse("Admin.SaveTags", args).Url
+}
+
 func (_ tAdmin) RedirectToSlug(
 		id int,
 		) string {
@@ -224,6 +246,35 @@ func (_ tAdmin) DeleteCategory(
 }
 
 
+type tStatic struct {}
+var Static tStatic
+
+
+func (_ tStatic) Serve(
+		prefix string,
+		filepath string,
+		) string {
+	args := make(map[string]string)
+	
+	revel.Unbind(args, "prefix", prefix)
+	revel.Unbind(args, "filepath", filepath)
+	return revel.MainRouter.Reverse("Static.Serve", args).Url
+}
+
+func (_ tStatic) ServeModule(
+		moduleName string,
+		prefix string,
+		filepath string,
+		) string {
+	args := make(map[string]string)
+	
+	revel.Unbind(args, "moduleName", moduleName)
+	revel.Unbind(args, "prefix", prefix)
+	revel.Unbind(args, "filepath", filepath)
+	return revel.MainRouter.Reverse("Static.ServeModule", args).Url
+}
+
+
 type tTestRunner struct {}
 var TestRunner tTestRunner
 
@@ -251,35 +302,6 @@ func (_ tTestRunner) List(
 	args := make(map[string]string)
 	
 	return revel.MainRouter.Reverse("TestRunner.List", args).Url
-}
-
-
-type tStatic struct {}
-var Static tStatic
-
-
-func (_ tStatic) Serve(
-		prefix string,
-		filepath string,
-		) string {
-	args := make(map[string]string)
-	
-	revel.Unbind(args, "prefix", prefix)
-	revel.Unbind(args, "filepath", filepath)
-	return revel.MainRouter.Reverse("Static.Serve", args).Url
-}
-
-func (_ tStatic) ServeModule(
-		moduleName string,
-		prefix string,
-		filepath string,
-		) string {
-	args := make(map[string]string)
-	
-	revel.Unbind(args, "moduleName", moduleName)
-	revel.Unbind(args, "prefix", prefix)
-	revel.Unbind(args, "filepath", filepath)
-	return revel.MainRouter.Reverse("Static.ServeModule", args).Url
 }
 
 
