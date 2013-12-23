@@ -1,4 +1,4 @@
-{{template "Admin/base.html" .}}
+{{template "admin/base.html" .}}
             <div class="span6">
                 <h4>Categories</h4>
                 <p>These are the categories currently available:</p>
@@ -7,7 +7,14 @@
                     {{range .categoryList}}
                         <tr>
                           <td>
-                            <p><strong>{{.Name}}</strong><br/>
+                            <p>
+                                <form action="{{ url "Admin.DeleteCategory" }}" method="post">
+                                    <input type="submit" class="pull-right btn" title="Delete this category" value="x">
+                                    <input type="hidden" name="name" value="{{.Name}}"/>
+                                </form>
+                                <strong>{{.Name}}</strong> 
+
+                                <br/>
                                 {{.Description}}
                             </p>
                           </td>
