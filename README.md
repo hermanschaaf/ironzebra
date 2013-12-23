@@ -46,7 +46,8 @@ News
 ----------
  - 24 December 2013
 
-   Added tags, which can be added and edited if you are logged in as admin
+   Added tags, which can be added and edited if you are logged in as admin.
+   Added ability to remove categories.
 
  - 17 August 2013 
 
