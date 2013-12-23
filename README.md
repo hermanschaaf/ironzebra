@@ -9,7 +9,9 @@ Features
 This will be a growing feature list. If you feel like it's lacking something important to you, please feel free to fork and make pull requests!
 
  - Markdown posts
- - Uses MongoDB for storage 
+ - RSS Feed of posts
+ - Customizable Categories
+ - MongoDB for storage 
  - A simple admin interface
  - Deploys effortlessly to Heroku
 
@@ -40,3 +42,10 @@ otherwise just commit your changes to git and run
 
     git push heroku master
 
+News
+----------
+
+ - 17 August 2013 
+
+   Added RSS feed, available at /rss
+   Working on i18n, but the support from Revel is a bit lacking
