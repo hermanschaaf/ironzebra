@@ -121,6 +121,7 @@ ul, li {
     right: 0; 
     border: 0;
     background: transparent url(/public/images/gopher.png) no-repeat top right;
+    margin: 0 !important;
 }
 .closing-text {
     margin-top: 40px;
