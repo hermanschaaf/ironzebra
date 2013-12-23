@@ -9,11 +9,13 @@ Features
 This will be a growing feature list. If you feel like it's lacking something important to you, please feel free to fork and make pull requests!
 
  - Markdown posts
- - Uses MongoDB for storage 
+ - RSS Feed of posts
+ - Customizable Categories
+ - MongoDB for storage 
  - A simple admin interface
  - Deploys effortlessly to Heroku
 
-Important things that are still lacking: post tags, template caching, image uploads and storage, multiple authors. 
+Important things that are still lacking: ~~post tags~~, template caching, image uploads and storage, multiple authors. 
 
 Running on Heroku
 ----------
@@ -42,6 +44,9 @@ otherwise just commit your changes to git and run
 
 News
 ----------
+ - 24 December 2013
+
+   Added tags, which can be added and edited if you are logged in as admin
 
  - 17 August 2013 
 

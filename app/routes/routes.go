@@ -80,6 +80,17 @@ func (_ tAdmin) Save(
 	return revel.MainRouter.Reverse("Admin.Save", args).Url
 }
 
+func (_ tAdmin) SaveTags(
+		shortid int,
+		tags string,
+		) string {
+	args := make(map[string]string)
+	
+	revel.Unbind(args, "shortid", shortid)
+	revel.Unbind(args, "tags", tags)
+	return revel.MainRouter.Reverse("Admin.SaveTags", args).Url
+}
+
 func (_ tAdmin) RedirectToSlug(
 		id int,
 		) string {
@@ -135,36 +146,6 @@ func (_ tAdmin) DeleteCategory(
 }
 
 
-type tApp struct {}
-var App tApp
-
-
-func (_ tApp) Index(
-		) string {
-	args := make(map[string]string)
-	
-	return revel.MainRouter.Reverse("App.Index", args).Url
-}
-
-func (_ tApp) Login(
-		) string {
-	args := make(map[string]string)
-	
-	return revel.MainRouter.Reverse("App.Login", args).Url
-}
-
-func (_ tApp) LoginPost(
-		username string,
-		password string,
-		) string {
-	args := make(map[string]string)
-	
-	revel.Unbind(args, "username", username)
-	revel.Unbind(args, "password", password)
-	return revel.MainRouter.Reverse("App.LoginPost", args).Url
-}
-
-
 type tBlog struct {}
 var Blog tBlog
 
@@ -199,6 +180,17 @@ func (_ tBlog) ListCategory(
 	return revel.MainRouter.Reverse("Blog.ListCategory", args).Url
 }
 
+func (_ tBlog) ListTag(
+		category string,
+		tag string,
+		) string {
+	args := make(map[string]string)
+	
+	revel.Unbind(args, "category", category)
+	revel.Unbind(args, "tag", tag)
+	return revel.MainRouter.Reverse("Blog.ListTag", args).Url
+}
+
 func (_ tBlog) Show(
 		category string,
 		id int,
@@ -221,6 +213,36 @@ func (_ tBlog) RedirectToSlug(
 	revel.Unbind(args, "category", category)
 	revel.Unbind(args, "id", id)
 	return revel.MainRouter.Reverse("Blog.RedirectToSlug", args).Url
+}
+
+
+type tApp struct {}
+var App tApp
+
+
+func (_ tApp) Index(
+		) string {
+	args := make(map[string]string)
+	
+	return revel.MainRouter.Reverse("App.Index", args).Url
+}
+
+func (_ tApp) Login(
+		) string {
+	args := make(map[string]string)
+	
+	return revel.MainRouter.Reverse("App.Login", args).Url
+}
+
+func (_ tApp) LoginPost(
+		username string,
+		password string,
+		) string {
+	args := make(map[string]string)
+	
+	revel.Unbind(args, "username", username)
+	revel.Unbind(args, "password", password)
+	return revel.MainRouter.Reverse("App.LoginPost", args).Url
 }
 
 

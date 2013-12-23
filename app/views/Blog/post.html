@@ -18,7 +18,15 @@
                 <div class="tags">
                     under <a href="{{url "Blog.ListCategory" .result.Category}}">{{.result.Category}}</a>
                 </div>
-                <hr />
+                {{$category := .result.Category}}
+                {{if not .isAdmin}}
+                    <ul class="tags">
+                        {{range .result.Tags}}
+                        <li class="tag"><a href="{{url "Blog.ListTag" $category .}}">{{.}}</a></li>
+                        {{end}}
+                    </ul>
+                {{end}}
+                <hr>
                 <div class="rss-link">
                     <a href="{{url "Blog.RSS" }}"><img src="/public/images/rss.png"/></a> <a href="{{url "Blog.RSS" }}">RSS</a>
                 </div>
@@ -40,3 +48,25 @@
                 <h1 class="title">{{if .result.Title}}{{ .result.Title}}{{else}}IronZebra{{end}}</h1>
                 {{if .result.Image}}<img class="post-image img-responsive" src="{{.result.Image}}">{{end}}
                 {{if .result.Subtitle}}<h2 class="subtitle">{{.result.Subtitle}}</h2>{{end}}
+                {{if .isAdmin}}
+                    {{$id := .result.ShortID}}
+                    <form method="post" action="{{url "Admin.SaveTags"}}">
+                        <input type="text" class="taginput" name="tags" value="{{range .result.Tags}}{{.}},{{end}}"/>
+                        <input type="hidden" name="shortid" value="{{$id}}"/>
+                    </form>
+                    <script src="/public/js/jquery-1.9.1.min.js"></script>
+                    <script src="/public/js/jquery.tagsinput.min.js"></script>
+                    <script type="text/javascript">
+                    $(function(){
+                        $('.taginput').tagsInput({
+                            height: 27,
+                            width: false,
+                            onChange: function(){
+                                $form = $(this).closest('form');
+                                $.post($form.attr('action'), $form.serialize(), function(r){
+                                });
+                            }
+                        });
+                    });
+                    </script>
+                {{end}}

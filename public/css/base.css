@@ -31,6 +31,9 @@ ul, li {
     font-size: 18px; 
     line-height: 1.4em;
 }
+.clear {
+    clear: both;
+}
 .page {
     margin-top: 30px;
 }
@@ -126,4 +129,85 @@ ul, li {
     .sidebar {
         text-align: center;
     }
+}
+
+/* tags */
+ul.tags {
+    list-style-type: none;
+    margin: 1em 0 0 0;
+}
+ul.tags:after{
+    clear:both;
+}
+ul.tags .tag {
+    display: inline-block;
+    margin-bottom: 4px; 
+}
+ul.tags .tag a {
+    font-family: helvetica; 
+    font-size: 13px; 
+    border: 1px solid #ABBFC6; 
+    -moz-border-radius:2px; 
+    -webkit-border-radius:2px; 
+    display: block; 
+    padding: 0px 4px; 
+    text-decoration:none; 
+    background: #D3E2E7; 
+    color: #4B626B;
+    font-size:13px;
+}
+
+div.tagsinput { 
+    border:1px solid #CCC; 
+    background: #FFF; 
+    padding:5px; 
+    width: 100%; 
+    height:27px; 
+    overflow-y: auto;
+}
+div.tagsinput span.tag { 
+    border: 1px solid #ABBFC6; 
+    -moz-border-radius:2px; 
+    -webkit-border-radius:2px; 
+    display: block; 
+    float: left; 
+    padding: 2px 4px; 
+    text-decoration:none; 
+    background: #D3E2E7; 
+    color: #4B626B;
+    margin-right: 5px; 
+    margin-bottom: 0;
+    font-size:13px;
+}
+div.tagsinput span.tag a { 
+    font-weight: bold; 
+    color: #7E9198; 
+    text-decoration:none; 
+    font-size: 11px;
+} 
+div.tagsinput input { 
+    width:80px; 
+    margin:0px; 
+    font-family: helvetica; 
+    font-size: 13px; 
+    border:1px solid transparent; 
+    padding:2px; 
+    background: transparent; 
+    color: #000; 
+    outline:0px; 
+    margin-right:5px; 
+    margin-bottom:0;
+}
+div.tagsinput div { 
+    display:block; 
+    float: left;
+} 
+.tags_clear { 
+    clear: both; 
+    width: 100%; 
+    height: 0px; 
+}
+.not_valid {
+    background: #FBD8DB !important; 
+    color: #90111A !important;
 }

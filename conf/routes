@@ -19,6 +19,7 @@ GET     /admin/edit/:id                         Admin.RedirectToSlug
 GET     /admin/new                              Admin.New
 GET     /admin/edit/:id/:slugString             Admin.Edit
 POST    /admin/save/new                         Admin.SaveNew
+POST    /admin/save/tags                		Admin.SaveTags
 POST    /admin/save/:id/                        Admin.Save
 POST    /admin/publish/:id/                     Admin.Publish
 POST    /admin/unpublish/:id/                   Admin.Unpublish
@@ -32,5 +33,6 @@ GET     /favicon.ico                            Static.Serve("public/images","fa
 GET     /public/*filepath                       Static.Serve("public")
 
 GET     /:category/                             Blog.ListCategory
+GET     /:category/tag/:tag                     Blog.ListTag
 GET     /:category/:id                          Blog.RedirectToSlug
 GET     /:category/:id/:slugString              Blog.Show

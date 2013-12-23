@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"github.com/gorilla/feeds"
 	"github.com/hermanschaaf/ironzebra/app/models"
 	"github.com/hermanschaaf/ironzebra/app/routes"
@@ -25,7 +26,7 @@ type Blog struct {
 	revmgo.MongoController
 }
 
-func getPosts(c Blog, limit int, category string, admin bool) []models.Post {
+func getPosts(c Blog, limit int, category string, tag string, admin bool) []models.Post {
 	collection := c.Database.C("posts")
 	postList := []models.Post{}
 	query := bson.M{"published": true}
@@ -34,6 +35,9 @@ func getPosts(c Blog, limit int, category string, admin bool) []models.Post {
 	}
 	if category != "" {
 		query["category"] = category
+	}
+	if tag != "" {
+		query["tags"] = tag
 	}
 	q := collection.Find(query).Sort("-timestamp")
 	if limit > 0 {
@@ -58,7 +62,7 @@ func getCategories(c Blog) []models.Category {
 func (c Blog) RSS() revel.Result {
 	c.Response.ContentType = "application/xml"
 
-	postList := getPosts(c, 20, "", false)
+	postList := getPosts(c, 20, "", "", false)
 
 	postsPath := routes.Blog.List()
 	rootUrl, _ := revel.Config.String("zebra.root_url")
@@ -94,24 +98,34 @@ func (c Blog) RSS() revel.Result {
 
 func (c Blog) List() revel.Result {
 	isAdmin := c.Session["role"] == "admin"
-	postList := getPosts(c, 5, "", isAdmin)
+	postList := getPosts(c, 5, "", "", isAdmin)
 	categoryList := getCategories(c)
 	return c.Render(postList, categoryList, isAdmin)
 }
 
 func (c Blog) ListAll() revel.Result {
 	isAdmin := c.Session["role"] == "admin"
-	postList := getPosts(c, 0, "", isAdmin)
+	postList := getPosts(c, 0, "", "", isAdmin)
 	categoryList := getCategories(c)
 	return c.Render(postList, categoryList, isAdmin)
 }
 
 func (c Blog) ListCategory(category string) revel.Result {
 	isAdmin := c.Session["role"] == "admin"
-	postList := getPosts(c, 0, category, isAdmin)
+	postList := getPosts(c, 0, category, "", isAdmin)
 	categoryList := getCategories(c)
 	currentCategory := category
 	return c.Render(postList, categoryList, isAdmin, currentCategory)
+}
+
+func (c Blog) ListTag(category, tag string) revel.Result {
+	isAdmin := c.Session["role"] == "admin"
+	postList := getPosts(c, 0, category, tag, isAdmin)
+	categoryList := getCategories(c)
+	currentCategory := category
+	currentTag := tag
+	tagTitle := fmt.Sprintf("Posts in %s tagged %s", currentCategory, tag)
+	return c.Render(postList, categoryList, isAdmin, currentTag, currentCategory, tagTitle)
 }
 
 func (c Blog) Show(category string, id int, slugString string) revel.Result {
