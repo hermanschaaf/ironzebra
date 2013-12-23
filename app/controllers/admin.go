@@ -216,3 +216,14 @@ func (c Admin) NewCategory(name, description string) revel.Result {
 	}
 	return c.Redirect(routes.Admin.Categories())
 }
+
+func (c Admin) DeleteCategory(name string) revel.Result {
+	collection := c.Database.C("categories")
+	err := collection.Remove(bson.M{
+		"name": name,
+	})
+	if err != nil {
+		panic(err)
+	}
+	return c.Redirect(routes.Admin.Categories())
+}

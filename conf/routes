@@ -24,6 +24,7 @@ POST    /admin/publish/:id/                     Admin.Publish
 POST    /admin/unpublish/:id/                   Admin.Unpublish
 GET     /admin/categories                       Admin.Categories
 POST    /admin/categories/new                   Admin.NewCategory
+POST    /admin/categories/delete                Admin.DeleteCategory
 
 GET     /favicon.ico                            Static.Serve("public/images","favicon.png")
 

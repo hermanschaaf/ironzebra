@@ -6,6 +6,6 @@ import (
 
 type Category struct {
 	ID          bson.ObjectId `bson:"_id,omitempty"`
-	Name        string
+	Name        string        `bson:"name"`
 	Description string
 }

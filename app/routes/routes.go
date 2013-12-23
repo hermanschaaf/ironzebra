@@ -4,6 +4,65 @@ package routes
 import "github.com/robfig/revel"
 
 
+type tBlog struct {}
+var Blog tBlog
+
+
+func (_ tBlog) RSS(
+		) string {
+	args := make(map[string]string)
+	
+	return revel.MainRouter.Reverse("Blog.RSS", args).Url
+}
+
+func (_ tBlog) List(
+		) string {
+	args := make(map[string]string)
+	
+	return revel.MainRouter.Reverse("Blog.List", args).Url
+}
+
+func (_ tBlog) ListAll(
+		) string {
+	args := make(map[string]string)
+	
+	return revel.MainRouter.Reverse("Blog.ListAll", args).Url
+}
+
+func (_ tBlog) ListCategory(
+		category string,
+		) string {
+	args := make(map[string]string)
+	
+	revel.Unbind(args, "category", category)
+	return revel.MainRouter.Reverse("Blog.ListCategory", args).Url
+}
+
+func (_ tBlog) Show(
+		category string,
+		id int,
+		slugString string,
+		) string {
+	args := make(map[string]string)
+	
+	revel.Unbind(args, "category", category)
+	revel.Unbind(args, "id", id)
+	revel.Unbind(args, "slugString", slugString)
+	return revel.MainRouter.Reverse("Blog.Show", args).Url
+}
+
+func (_ tBlog) RedirectToSlug(
+		category string,
+		id int,
+		) string {
+	args := make(map[string]string)
+	
+	revel.Unbind(args, "category", category)
+	revel.Unbind(args, "id", id)
+	return revel.MainRouter.Reverse("Blog.RedirectToSlug", args).Url
+}
+
+
 type tApp struct {}
 var App tApp
 
@@ -155,63 +214,13 @@ func (_ tAdmin) NewCategory(
 	return revel.MainRouter.Reverse("Admin.NewCategory", args).Url
 }
 
-
-type tBlog struct {}
-var Blog tBlog
-
-
-func (_ tBlog) RSS(
+func (_ tAdmin) DeleteCategory(
+		name string,
 		) string {
 	args := make(map[string]string)
 	
-	return revel.MainRouter.Reverse("Blog.RSS", args).Url
-}
-
-func (_ tBlog) List(
-		) string {
-	args := make(map[string]string)
-	
-	return revel.MainRouter.Reverse("Blog.List", args).Url
-}
-
-func (_ tBlog) ListAll(
-		) string {
-	args := make(map[string]string)
-	
-	return revel.MainRouter.Reverse("Blog.ListAll", args).Url
-}
-
-func (_ tBlog) ListCategory(
-		category string,
-		) string {
-	args := make(map[string]string)
-	
-	revel.Unbind(args, "category", category)
-	return revel.MainRouter.Reverse("Blog.ListCategory", args).Url
-}
-
-func (_ tBlog) Show(
-		category string,
-		id int,
-		slugString string,
-		) string {
-	args := make(map[string]string)
-	
-	revel.Unbind(args, "category", category)
-	revel.Unbind(args, "id", id)
-	revel.Unbind(args, "slugString", slugString)
-	return revel.MainRouter.Reverse("Blog.Show", args).Url
-}
-
-func (_ tBlog) RedirectToSlug(
-		category string,
-		id int,
-		) string {
-	args := make(map[string]string)
-	
-	revel.Unbind(args, "category", category)
-	revel.Unbind(args, "id", id)
-	return revel.MainRouter.Reverse("Blog.RedirectToSlug", args).Url
+	revel.Unbind(args, "name", name)
+	return revel.MainRouter.Reverse("Admin.DeleteCategory", args).Url
 }
 
 

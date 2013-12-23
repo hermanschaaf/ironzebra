@@ -1,4 +1,4 @@
-{{template "Admin/base.html" .}}
+{{template "admin/base.html" .}}
             <div class="span6">
                 <form method="post" accept-charset="utf-8" class="form-vertical" action="{{if .result.ShortID}}{{url `Admin.Save` .result.ShortID}}{{else}}{{url `Admin.SaveNew`}}{{end}}">
                     <fieldset>
