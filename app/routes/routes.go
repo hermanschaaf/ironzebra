@@ -146,6 +146,36 @@ func (_ tAdmin) DeleteCategory(
 }
 
 
+type tApp struct {}
+var App tApp
+
+
+func (_ tApp) Index(
+		) string {
+	args := make(map[string]string)
+	
+	return revel.MainRouter.Reverse("App.Index", args).Url
+}
+
+func (_ tApp) Login(
+		) string {
+	args := make(map[string]string)
+	
+	return revel.MainRouter.Reverse("App.Login", args).Url
+}
+
+func (_ tApp) LoginPost(
+		username string,
+		password string,
+		) string {
+	args := make(map[string]string)
+	
+	revel.Unbind(args, "username", username)
+	revel.Unbind(args, "password", password)
+	return revel.MainRouter.Reverse("App.LoginPost", args).Url
+}
+
+
 type tBlog struct {}
 var Blog tBlog
 
@@ -213,36 +243,6 @@ func (_ tBlog) RedirectToSlug(
 	revel.Unbind(args, "category", category)
 	revel.Unbind(args, "id", id)
 	return revel.MainRouter.Reverse("Blog.RedirectToSlug", args).Url
-}
-
-
-type tApp struct {}
-var App tApp
-
-
-func (_ tApp) Index(
-		) string {
-	args := make(map[string]string)
-	
-	return revel.MainRouter.Reverse("App.Index", args).Url
-}
-
-func (_ tApp) Login(
-		) string {
-	args := make(map[string]string)
-	
-	return revel.MainRouter.Reverse("App.Login", args).Url
-}
-
-func (_ tApp) LoginPost(
-		username string,
-		password string,
-		) string {
-	args := make(map[string]string)
-	
-	revel.Unbind(args, "username", username)
-	revel.Unbind(args, "password", password)
-	return revel.MainRouter.Reverse("App.LoginPost", args).Url
 }
 
 
