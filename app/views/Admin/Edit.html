@@ -37,7 +37,7 @@
                                     <option value="post">post</option>
 
                                 {{range $categoryList}}
-                                    <option value="{{.Name}}" {{if $field.Flash}}{{if eq $field.Flash .Name}}selected="selected"{{end}}{{else}}{{if eq $result.Title .Name}}selected="selected"{{end}}{{end}}>{{.Name}}</option>
+                                    <option value="{{.Name}}" {{if $field.Flash}}{{if eq $field.Flash .Name}}selected="selected"{{end}}{{else}}{{if eq $result.Category .Name}}selected="selected"{{end}}{{end}}>{{.Name}}</option>
                                 {{end}}
                                 </select>
                             </div>
